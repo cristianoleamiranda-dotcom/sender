@@ -28,6 +28,7 @@ export const siteContent: SiteContent = {
       { id: "proyectos", href: "/#proyectos", label: { es: "Proyectos", en: "Projects" } },
       { id: "contacto", href: "/#contacto", label: { es: "Contacto", en: "Contact" } },
     ],
+    main: { es: "Navegación principal", en: "Main navigation" },
     cta: { es: "Consultar", en: "Consult" },
     language: { es: "Seleccionar idioma", en: "Select language" },
     openMenu: { es: "Abrir menú", en: "Open menu" },

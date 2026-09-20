@@ -6,10 +6,12 @@
   "description": "SENDER Chile — Tecnología que transmite. Ingeniería RF, radiodifusión y telecomunicaciones.",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && npm run sitemap && npm run fixbase",
     "typecheck": "tsc -b --force",
     "preview": "vite preview",
-    "assets": "python3 scripts/optimize-assets.py"
+    "assets": "python3 scripts/optimize-assets.py",
+    "sitemap": "python3 scripts/build-sitemap.py",
+    "fixbase": "node scripts/fix-base.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",

@@ -50,6 +50,8 @@ export interface NavItem {
 
 export interface NavContent {
   items: NavItem[];
+  /** Etiqueta accesible de la navegación principal. */
+  main: Loc;
   cta: Loc;
   language: Loc;
   openMenu: Loc;

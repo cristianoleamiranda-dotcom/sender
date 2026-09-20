@@ -1,267 +1,246 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useMemo, useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "motion/react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useVideoScrub } from "@/hooks/useVideoScrub";
+import { useCinematicHero } from "@/hooks/useCinematicHero";
+import { useAnchorNavigation } from "@/hooks/useAnchorNavigation";
+import { publicAsset } from "@/utils/assetUrl";
+import { SignalWave } from "@/ui/SignalWave";
 
-interface HeroProps {
-  onTransportStateChange?: (state: "armed" | "released") => void;
-}
+/**
+ * HERO — SENDER / TECNOLOGÍA QUE TRANSMITE
+ *
+ * Estructura: una pista de 3 viewports de alto con el contenido fijado en
+ * pantalla. El progreso de scroll dentro de esa pista controla el transporte
+ * del video real (`public/assets/sender-hero.mp4`) y la opacidad del velo
+ * oscuro: la señal "se abre" a medida que se avanza.
+ *
+ * No se secuestra la rueda, el touch ni el teclado. Ver `useCinematicHero`.
+ *
+ * Jerarquía semántica: el único H1 del sitio es el wordmark SENDER.
+ */
 
-export function Hero({ onTransportStateChange }: HeroProps) {
-  const { t, lang, setLang } = useLang();
-  const reducedMotion = useReducedMotion();
+/** Vueltas de pista antes de liberar el hero. 300vh da ~2 viewports de scrub. */
+const TRACK_VH = 300;
 
-  const heroRef = useRef<HTMLElement>(null);
+export function Hero() {
+  const { t } = useLang();
+  const go = useAnchorNavigation();
+  const reduced = useReducedMotion();
+
+  const trackRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const navWrapRef = useRef<HTMLDivElement>(null);
-  const ctaWrapRef = useRef<HTMLAnchorElement>(null);
-  const wordmarkRef = useRef<HTMLHeadingElement>(null);
-  const chipsRef = useRef<HTMLDivElement>(null);
-  const locRef = useRef<HTMLSpanElement>(null);
-  const fadeRef = useRef<HTMLDivElement>(null);
-  const hintRef = useRef<HTMLDivElement>(null);
 
-  const [currentTransportState, setCurrentTransportState] = useState<"armed" | "released">("armed");
-
-  const { navigateToSection } = useVideoScrub({
+  const { mode } = useCinematicHero({
     videoRef,
-    containerRef: heroRef,
-    reducedMotion,
-    onStateChange: (st) => {
-      setCurrentTransportState(st);
-      onTransportStateChange?.(st);
-    },
-    onUiUpdate: (_progress, _currentTime, k) => {
-      // Direct DOM updates for maximum 60/120fps performance
-      if (navWrapRef.current) {
-        navWrapRef.current.style.transform = `translateX(${-130 * k}%)`;
-        navWrapRef.current.style.opacity = String(Math.max(0, 1 - k * 1.15));
-      }
-      if (ctaWrapRef.current) {
-        ctaWrapRef.current.style.transform = `translateX(${160 * k}%)`;
-        ctaWrapRef.current.style.opacity = String(Math.max(0, 1 - k * 1.15));
-      }
-      if (wordmarkRef.current) {
-        wordmarkRef.current.style.transform = `translateY(${-300 * k}%)`;
-        wordmarkRef.current.style.opacity = String(Math.max(0, 1 - k * 1.15));
-      }
-      if (chipsRef.current) {
-        chipsRef.current.style.transform = `translateX(${-140 * k}%)`;
-        chipsRef.current.style.opacity = String(Math.max(0, 1 - k * 1.15));
-      }
-      if (locRef.current) {
-        locRef.current.style.transform = `translateX(${200 * k}%)`;
-        locRef.current.style.opacity = String(Math.max(0, 1 - k * 1.15));
-      }
-      if (fadeRef.current) {
-        fadeRef.current.style.opacity = String(Math.max(0, 1 - k * 1.15));
-      }
-      if (hintRef.current) {
-        hintRef.current.style.opacity = String(Math.max(0, 1 - k * 2.5));
-      }
-    },
+    trackRef,
+    reducedMotion: reduced,
   });
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
-    navigateToSection(id);
-  };
+  const { scrollYProgress } = useScroll({
+    target: trackRef,
+    offset: ["start start", "end end"],
+  });
+  // El muelle evita que el video y el velo vayan a saltos con un trackpad.
+  const k = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 });
 
-  const navItems = [
-    { id: "hero", label: t.nav.home },
-    { id: "about", label: t.nav.about },
-    { id: "process", label: t.nav.engineering },
-    { id: "products", label: t.nav.products },
-    { id: "work", label: t.nav.projects },
-    { id: "contact", label: t.nav.contact },
-  ];
+  /* El velo se levanta: al principio tapa el video para garantizar contraste. */
+  const veilOpacity = useTransform(k, [0, 0.25, 1], [0.94, 0.78, 0.42]);
+  const videoOpacity = useTransform(k, (v) => (mode === "poster" ? 0 : Math.min(1, v * 1.5)));
+  const contentY = useTransform(k, [0, 1], [0, -160]);
+  const contentOpacity = useTransform(k, [0, 0.6, 1], [1, 0.15, 0]);
+  const waveOpacity = useTransform(k, [0, 0.35, 1], [0.35, 1, 0.55]);
+  const wordmarkScale = useTransform(k, [0, 1], [1, 1.06]);
+  const wordmarkTracking = useTransform(k, [0, 1], ["-0.055em", "-0.02em"]);
+  const scanY = useTransform(k, [0, 1], ["-10%", "110%"]);
+
+  const wordmarkStyle = useMemo(
+    () => ({ scale: wordmarkScale, letterSpacing: wordmarkTracking }),
+    [wordmarkScale, wordmarkTracking],
+  );
+
+  const heroTitle = t.hero.claim;
 
   return (
-    <section
-      id="hero"
-      ref={heroRef}
-      className="hero relative isolate h-[100svh] min-h-[640px] w-full overflow-hidden bg-white select-none"
-      style={{ containerType: "inline-size" }}
-      aria-label="SENDER — Engineering the Signal"
+    <div
+      ref={trackRef}
+      className="relative w-full"
+      style={{ height: reduced ? "auto" : `${TRACK_VH}vh` }}
     >
-      {/* ===== Video Background Layer ===== */}
-      <div id="hero-video-wrap" className="absolute inset-0 -z-10 bg-black">
-        <video
+      <div
+        className={
+          reduced
+            ? "relative flex min-h-[100svh] w-full items-center overflow-hidden bg-ink"
+            : "sticky top-0 flex h-[100svh] w-full items-center overflow-hidden bg-ink"
+        }
+      >
+        {/* ---------- Capa 1 · video real ---------- */}
+        <motion.video
           ref={videoRef}
-          id="hero-video"
-          className="h-full w-full object-cover"
+          aria-hidden="true"
+          tabIndex={-1}
           muted
           playsInline
-          preload="auto"
-          aria-hidden="true"
+          preload="none"
+          disablePictureInPicture
+          className="absolute inset-0 h-full w-full object-cover"
+          style={{ opacity: videoOpacity }}
         >
-          <source src="./assets/sender-hero.mp4" type="video/mp4" />
-        </video>
+          <source src={publicAsset("assets/sender-hero.mp4")} type="video/mp4" />
+        </motion.video>
 
-        {/* Hero gradient fade according to spec */}
+        {/* ---------- Capa 2 · póster (frame real del video) ---------- */}
+        {/* Siempre presente: es el LCP en móvil y el respaldo del modo poster. */}
+        <picture aria-hidden="true">
+          <source
+            type="image/webp"
+            srcSet={`${publicAsset("assets/hero-poster-640.webp")} 640w, ${publicAsset(
+              "assets/hero-poster-960.webp",
+            )} 960w, ${publicAsset("assets/hero-poster-1280.webp")} 1280w`}
+            sizes="100vw"
+          />
+          <img
+            src={publicAsset("assets/hero-poster-960.webp")}
+            alt=""
+            fetchPriority="high"
+            decoding="async"
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ opacity: mode === "poster" ? 0.5 : 0.22 }}
+          />
+        </picture>
+
+        {/* ---------- Capa 3 · velo oscuro ---------- */}
+        <motion.div
+          aria-hidden="true"
+          className="absolute inset-0 bg-ink"
+          style={{ opacity: veilOpacity }}
+        />
+        {/* Viñeta: profundidad sin recurrir a glassmorphism. */}
         <div
-          ref={fadeRef}
-          id="hero-fade"
-          className="absolute inset-0 pointer-events-none transition-opacity"
+          aria-hidden="true"
+          className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, #ffffff 0%, rgba(255,255,255,0.82) 28%, rgba(255,255,255,0.42) 60%, rgba(255,255,255,0) 100%)",
-            opacity: 1,
+              "radial-gradient(120% 90% at 50% 45%, transparent 0%, rgba(8,9,10,0.55) 62%, rgba(5,7,8,0.95) 100%)",
           }}
-          aria-hidden="true"
         />
-      </div>
 
-      {/* ===== Hero Top Bar: Brand, Navigation Pills, Language Switcher, CTA ===== */}
-      <div className="hero-top absolute top-0 left-0 right-0 z-20 px-4 sm:px-8 lg:px-12 py-5 sm:py-6">
-        <div className="max-w-[1600px] mx-auto flex items-center justify-between gap-4">
-          {/* Brand + Nav pills cluster */}
-          <div ref={navWrapRef} className="flex items-center gap-6 lg:gap-8 transition-transform will-change-transform">
-            <a
-              href="#hero"
-              onClick={(e) => handleNavClick(e, "hero")}
-              className="flex items-center gap-2 group cursor-pointer"
-              aria-label="SENDER"
-            >
-              <span className="relative flex h-2 w-2 items-center justify-center">
-                <span className="absolute h-2 w-2 rounded-full bg-[#1e73be]" />
-                <span className="absolute h-3 w-3 rounded-full bg-[#1e73be]/40 animate-ping" />
-              </span>
-              <span className="text-lg sm:text-xl font-semibold tracking-[0.14em] text-[#494949] group-hover:text-[#1e73be] transition-colors">
-                SENDER
-              </span>
-            </a>
+        {/* ---------- Capa 4 · retícula técnica ---------- */}
+        <div aria-hidden="true" className="grid-tech absolute inset-0 opacity-60" />
 
-            {/* Desktop Navigation Pills */}
-            <nav id="nav" className="hidden md:flex items-center gap-1.5" aria-label="Navegación Hero">
-              {navItems.map((item) => (
-                <a
-                  key={item.id}
-                  href={`#${item.id}`}
-                  onClick={(e) => handleNavClick(e, item.id)}
-                  className="px-3 py-1 rounded-full text-[0.72rem] font-medium tracking-[0.15em] uppercase text-[#494949] hover:text-[#1e73be] hover:bg-[#494949]/5 transition-all"
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-          </div>
+        {/* ---------- Capa 5 · barrido de señal ---------- */}
+        {!reduced && (
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 h-px"
+            style={{
+              top: 0,
+              y: scanY,
+              background:
+                "linear-gradient(90deg, transparent, rgba(79,154,216,0.55) 20%, rgba(30,115,190,0.9) 50%, rgba(79,154,216,0.55) 80%, transparent)",
+              boxShadow: "0 0 24px rgba(30,115,190,0.35)",
+            }}
+          />
+        )}
 
-          {/* Right cluster: Language switcher + CTA button */}
-          <div className="flex items-center gap-3 sm:gap-4">
-            {/* Language Switcher */}
-            <div
-              className="flex items-center gap-1 text-[0.72rem] tracking-[0.18em] uppercase font-medium"
-              role="group"
-              aria-label="Seleccionar idioma"
-            >
-              <button
-                type="button"
-                onClick={() => setLang("es")}
-                className={`px-1.5 py-0.5 transition-colors cursor-pointer ${
-                  lang === "es"
-                    ? "text-[#1e73be] font-bold"
-                    : "text-[#494949]/70 hover:text-[#494949]"
-                }`}
-              >
-                ES
-              </button>
-              <span className="text-[#494949]/30">|</span>
-              <button
-                type="button"
-                onClick={() => setLang("en")}
-                className={`px-1.5 py-0.5 transition-colors cursor-pointer ${
-                  lang === "en"
-                    ? "text-[#1e73be] font-bold"
-                    : "text-[#494949]/70 hover:text-[#494949]"
-                }`}
-              >
-                EN
-              </button>
-            </div>
-
-            {/* CTA Button */}
-            <a
-              ref={ctaWrapRef}
-              href="#contact"
-              onClick={(e) => handleNavClick(e, "contact")}
-              className="inline-flex items-center justify-center px-4 sm:px-5 py-2 rounded-full text-[0.72rem] font-medium tracking-[0.16em] uppercase border border-[#494949] text-[#494949] hover:bg-[#1e73be] hover:border-[#1e73be] hover:text-white transition-all will-change-transform cursor-pointer"
-            >
-              {t.hero.cta}
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* ===== Hero Eyebrow Line ===== */}
-      <div className="absolute top-[13vh] sm:top-[15vh] left-4 sm:left-8 lg:left-12 z-10 pointer-events-none">
-        <span className="text-[0.68rem] sm:text-[0.75rem] uppercase tracking-[0.25em] font-medium text-[#494949]/80">
-          {t.hero.eyebrow}
-        </span>
-      </div>
-
-      {/* ===== Hero Main Wordmark ===== */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-4">
-        <h1
-          ref={wordmarkRef}
-          id="hero-word"
-          className="hero-wordmark font-medium whitespace-nowrap text-[#494949] will-change-transform"
-          style={{
-            fontSize: "clamp(4.2rem, 16cqw, 17rem)",
-            lineHeight: 0.78,
-            letterSpacing: "-0.055em",
-          }}
-          aria-label="SENDER"
+        {/* ---------- Capa 6 · visualización de señal ---------- */}
+        <motion.div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-[18vh] hidden md:block"
+          style={{ opacity: waveOpacity }}
         >
-          SENDER
-        </h1>
-      </div>
+          <SignalWave phase={reduced ? 0 : undefined} />
+        </motion.div>
 
-      {/* ===== Hero Foot: Technical Chips + Location ===== */}
-      <div className="hero-foot absolute bottom-0 left-0 right-0 z-20 px-4 sm:px-8 lg:px-12 py-5 sm:py-6">
-        <div className="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          {/* Pills / Chips */}
-          <div
-            ref={chipsRef}
-            id="chips"
-            className="flex flex-wrap items-center gap-2 will-change-transform"
-            aria-label="Especialidades técnicas"
+        {/* ---------- Capa 7 · contenido ---------- */}
+        <motion.div
+          className="relative z-10 mx-auto w-full max-w-[1600px] px-5 sm:px-8 lg:px-12 xl:px-16"
+          style={reduced ? undefined : { y: contentY, opacity: contentOpacity }}
+        >
+          {/* Eyebrow */}
+          <div className="mb-6 flex flex-wrap items-center gap-x-5 gap-y-2 sm:mb-8">
+            <span aria-hidden="true" className="h-px w-10 bg-signal" />
+            <span className="label-signal">
+              {t.hero.meta[2]}
+            </span>
+          </div>
+
+          {/* H1 único del sitio */}
+          <motion.h1
+            className="hero-wordmark display select-none"
+            style={reduced ? undefined : wordmarkStyle}
           >
-            <span className="inline-flex items-center px-3.5 py-1 rounded-full text-[0.68rem] tracking-[0.18em] uppercase font-medium bg-white text-[#494949] border border-white shadow-sm">
-              RF ENGINEERING
-            </span>
-            <span className="inline-flex items-center px-3.5 py-1 rounded-full text-[0.68rem] tracking-[0.18em] uppercase font-medium bg-black/25 backdrop-blur-sm text-white border border-white/60">
-              BROADCASTING
-            </span>
-            <span className="inline-flex items-center px-3.5 py-1 rounded-full text-[0.68rem] tracking-[0.18em] uppercase font-medium bg-black/25 backdrop-blur-sm text-white border border-white/60">
-              TRANSMISSION
-            </span>
-          </div>
+            {t.hero.wordmark}
+          </motion.h1>
 
-          {/* Location */}
-          <div ref={locRef} className="will-change-transform">
-            <span
-              id="loc"
-              className="text-[0.72rem] tracking-[0.24em] uppercase font-medium text-white drop-shadow-sm"
+          {/* Claim */}
+          <p className="mt-6 max-w-[22ch] text-[clamp(1.5rem,4.4vw,3.25rem)] leading-[1.02] font-light tracking-[-0.03em] text-paper uppercase sm:mt-8">
+            {heroTitle}
+          </p>
+
+          <p className="body-tech mt-5 max-w-[54ch] sm:mt-6">{t.hero.sub}</p>
+
+          {/* CTA */}
+          <div className="mt-9 flex flex-col gap-3 sm:mt-11 sm:flex-row sm:items-center sm:gap-4">
+            <button
+              type="button"
+              onClick={() => go("/#senal")}
+              className="group inline-flex items-center justify-center gap-3 bg-paper px-8 py-4 font-mono text-[0.6875rem] tracking-[0.2em] text-ink uppercase transition-colors duration-500 hover:bg-signal hover:text-paper"
             >
-              {t.hero.location}
-            </span>
+              {t.hero.primary}
+              <span
+                aria-hidden="true"
+                className="transition-transform duration-500 group-hover:translate-x-1"
+              >
+                ↓
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => go("/#contacto")}
+              className="group inline-flex items-center justify-center gap-3 border border-line-strong px-8 py-4 font-mono text-[0.6875rem] tracking-[0.2em] text-paper uppercase transition-colors duration-500 hover:border-signal hover:text-signal-soft"
+            >
+              {t.hero.secondary}
+              <span
+                aria-hidden="true"
+                className="h-1 w-1 bg-signal transition-colors duration-500 group-hover:bg-signal-soft"
+              />
+            </button>
           </div>
-        </div>
-      </div>
 
-      {/* ===== Interactive Hint (visible when armed) ===== */}
-      {currentTransportState === "armed" && !reducedMotion && (
-        <div
-          ref={hintRef}
-          className="absolute bottom-16 sm:bottom-20 left-4 sm:left-8 lg:left-12 z-20 pointer-events-none transition-opacity"
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/30 backdrop-blur-sm border border-white/20 text-white/90 text-[0.65rem] tracking-[0.18em] uppercase">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#0085b2] animate-pulse" />
-            {t.hero.hint}
-          </div>
-        </div>
-      )}
-    </section>
+          {/* Meta técnica */}
+          <ul className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 sm:mt-12">
+            {t.hero.meta.slice(0, 2).map((m) => (
+              <li key={m} className="label">
+                {m}
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+
+        {/* ---------- Indicador de scroll ---------- */}
+        {!reduced && (
+          <motion.div
+            className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3 sm:bottom-8"
+            style={{ opacity: contentOpacity }}
+            aria-hidden="true"
+          >
+            <span className="label">{t.hero.scroll}</span>
+            <span className="relative block h-10 w-px overflow-hidden bg-line-strong">
+              <motion.span
+                className="absolute inset-x-0 top-0 block h-4 bg-signal-soft"
+                animate={{ y: ["-100%", "250%"] }}
+                transition={{ duration: 2.1, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </span>
+          </motion.div>
+        )}
+      </div>
+    </div>
   );
 }

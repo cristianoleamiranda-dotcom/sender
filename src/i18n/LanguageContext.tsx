@@ -43,7 +43,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, [lang]);
 
   // Se resuelve una sola vez por cambio de idioma, no en cada render.
-  const t = useMemo(() => resolve(siteContent, lang) as SiteCopy, [lang]);
+  const t = useMemo(() => resolve(siteContent, lang), [lang]);
 
   const value = useMemo<LanguageContextValue>(
     () => ({ lang, setLang, t }),

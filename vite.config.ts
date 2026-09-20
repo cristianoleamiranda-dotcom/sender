@@ -8,13 +8,18 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * `base` se toma de VITE_BASE_PATH para que el mismo build sirva en:
- *   - desarrollo local            -> "/"
- *   - GitHub Pages (repo /sender) -> "/sender/"
+ * `base` se toma de VITE_BASE_PATH para que el mismo código sirva en los tres
+ * destinos:
+ *   - desarrollo local            -> "/"  (por defecto)
+ *   - GitHub Pages (repo /sender) -> "/sender/"  (lo fija deploy.yml)
  *   - dominio propio sender.cl    -> "/"
- * El workflow de Pages lo fija con `actions/configure-pages`.
+ *
+ * Por qué "/" y no "./" por defecto: con rutas profundas (/producto/x) las URL
+ * relativas se resuelven contra el directorio actual y romperían los
+ * <script src> y <link href> del HTML servido. Con base absoluta, un único
+ * index.html sirve para cualquier profundidad de ruta.
  */
-const base = process.env.VITE_BASE_PATH ?? "./";
+const base = process.env.VITE_BASE_PATH ?? "/";
 
 // https://vite.dev/config/
 export default defineConfig({

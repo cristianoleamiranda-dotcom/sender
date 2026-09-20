@@ -3,15 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#080909" />
-    <title>Sender — Engineering the Signal | Ingeniería RF, Radiodifusión y Telecomunicaciones en Chile</title>
+    <meta name="theme-color" content="#08090a" />
+    <meta name="color-scheme" content="dark" />
+
+    <title>Sender — Tecnología que transmite | Ingeniería RF, Broadcasting y Telecomunicaciones en Chile</title>
     <meta
       name="description"
-      content="Sender: empresa chilena con más de 20 años de experiencia en ingeniería RF, radiodifusión y sistemas de transmisión. Transmisores AM/FM, antenas profesionales, sistemas NAVTEX, HF, VHF/UHF, torres y comunicaciones críticas. Diseño, fabricación, implementación y soporte."
+      content="Sender: empresa chilena con más de 20 años de experiencia en ingeniería RF, radiodifusión y sistemas de transmisión. Transmisores AM/FM de estado sólido, enlaces STL, procesadores de audio, automatización, antenas HF, torres y sistemas NAVTEX. Diseño, fabricación, implementación y soporte."
     />
     <meta
       name="keywords"
-      content="Sender, telecomunicaciones Chile, ingeniería RF Chile, radiodifusión Chile, sistemas de transmisión, antenas, transmisores AM, transmisores FM, NAVTEX, comunicaciones críticas"
+      content="Sender Chile, broadcasting Chile, transmisores FM Chile, transmisores AM Chile, equipos broadcasting Chile, telecomunicaciones Chile, STL enlaces Chile, RF Chile, automatización broadcasting, transmisores de radio, equipos para radio, tecnología broadcasting, NAVTEX, antenas HF, ingeniería RF"
     />
     <link rel="canonical" href="https://www.sender.cl/" />
 
@@ -20,35 +22,87 @@
     <meta property="og:locale" content="es_CL" />
     <meta property="og:locale:alternate" content="en_US" />
     <meta property="og:site_name" content="Sender" />
-    <meta property="og:title" content="Sender — Engineering the Signal" />
+    <meta property="og:title" content="Sender — Tecnología que transmite" />
     <meta
       property="og:description"
       content="Ingeniería, transmisión y tecnología para radiodifusión, telecomunicaciones y comunicaciones críticas. Más de 20 años en Chile y proyectos internacionales."
     />
     <meta property="og:url" content="https://www.sender.cl/" />
+    <meta property="og:image" content="https://www.sender.cl/assets/hero-poster-1280.webp" />
+    <meta property="og:image:alt" content="Sender — Tecnología que transmite" />
+
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Sender — Engineering the Signal" />
+    <meta name="twitter:title" content="Sender — Tecnología que transmite" />
     <meta
       name="twitter:description"
       content="Ingeniería RF, radiodifusión y sistemas de transmisión. Diseño, fabricación, implementación y soporte técnico."
     />
+    <meta name="twitter:image" content="https://www.sender.cl/assets/hero-poster-1280.webp" />
 
-    <!-- Fonts -->
+    <!--
+      Tipografía.
+      Se sirve primero con el stack nativo del sistema (cero bytes de red, cero
+      bloqueo de render) y las webfonts se cargan de forma asíncrona encima:
+      con `media="print"` la hoja no bloquea el pintado y se activa al terminar.
+      Si el usuario está sin red o el dominio no resuelve, el sitio se ve igual
+      de bien con la tipografía del sistema.
+    -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
     />
+    <link
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      />
+    </noscript>
 
-    <!-- Schema.org -->
+    <!--
+      Precarga del póster del hero (es el LCP).
+
+      Se inyecta por script en vez de dejar un <link> estático porque la ruta
+      correcta depende del `base` del build: "/" en dominio propio y
+      "/sender/" en GitHub Pages. __BASE_PATH__ lo sustituye Vite al copiar
+      public/ a dist/, así que la URL es correcta en ambos destinos.
+
+      El video NO se precarga: son 4.8 MB y en móvil ni siquiera se solicita.
+      Ver src/hooks/useCinematicHero.ts.
+    -->
+    <script>
+      (function () {
+        var base = "__BASE_PATH__";
+        if (base.charAt(base.length - 1) !== "/") base += "/";
+        var w = window.innerWidth < 700 ? 640 : window.innerWidth < 1200 ? 960 : 1280;
+        var link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "image";
+        link.type = "image/webp";
+        link.fetchPriority = "high";
+        link.href = base + "assets/hero-poster-" + w + ".webp";
+        document.head.appendChild(link);
+      })();
+    </script>
+
+    <!-- Structured data. Las rutas de catálogo añaden el suyo en cliente
+         (src/seo/jsonLd.ts) y lo retiran al cambiar de ruta. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "Sender",
         "url": "https://www.sender.cl/",
-        "slogan": "Engineering the Signal",
+        "slogan": "Technology that transmits",
         "description": "Empresa chilena con más de 20 años de experiencia en telecomunicaciones, radiodifusión y sistemas de transmisión profesional. Equipos RF, antenas y tecnología de broadcasting para proyectos nacionales e internacionales.",
         "email": "sender@sender.cl",
         "telephone": "+56983864148",
@@ -67,7 +121,8 @@
           "NAVTEX",
           "Antenas HF",
           "Sistemas de transmisión",
-          "Comunicaciones críticas"
+          "Enlaces estudio-planta",
+          "Automatización de broadcasting"
         ]
       }
     </script>

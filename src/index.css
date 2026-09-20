@@ -34,13 +34,21 @@
   --color-line: rgba(255, 255, 255, 0.09);
   --color-line-strong: rgba(255, 255, 255, 0.18);
 
-  /* Tipografía
-     Stack nativo: cero bytes de red, cero bloqueo de render.
-     En macOS resuelve Helvetica Neue (tipografía del sistema Sender);
-     en Windows/Android cae a Inter/Roboto, que comparten métricas
-     compatibles con la escala display compacta. */
-  --font-sans: "Helvetica Neue", "Inter", "Segoe UI Variable Text", "Segoe UI",
-    system-ui, -apple-system, Roboto, Arial, sans-serif;
+  /* Tipografía -------------------------------------------------------
+     CONTRASTE BUSCADO: DISPLAY enorme y compacta contra MONO técnica
+     pequeña y muy espaciada.
+
+     Ambas familias se cargan de forma asíncrona desde index.html. Los
+     fallbacks están elegidos por métrica compatible, de modo que el salto
+     de layout cuando llega la webfont sea mínimo:
+       - Space Grotesk  -> Helvetica Neue / Segoe UI / system-ui
+       - IBM Plex Mono  -> ui-monospace / SF Mono / Consolas
+     Sin red (o con la fuente bloqueada) el sitio se ve igualmente correcto.
+     ----------------------------------------------------------------- */
+  --font-display: "Space Grotesk", "Helvetica Neue", "Segoe UI Variable Display",
+    "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --font-sans: "Space Grotesk", "Helvetica Neue", "Segoe UI Variable Text",
+    "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo,
     Consolas, "Liberation Mono", monospace;
 
@@ -134,7 +142,7 @@
 @layer utilities {
   /* Display: títulos gigantes, bold, compactos, editoriales */
   .display {
-    font-family: var(--font-sans);
+    font-family: var(--font-display);
     font-weight: 700;
     line-height: 0.86;
     letter-spacing: -0.045em;
@@ -143,7 +151,7 @@
   }
 
   .display-light {
-    font-family: var(--font-sans);
+    font-family: var(--font-display);
     font-weight: 300;
     line-height: 0.92;
     letter-spacing: -0.035em;
