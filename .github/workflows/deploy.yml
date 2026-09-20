@@ -50,7 +50,11 @@ jobs:
       - name: Build
         # El sitio se publica bajo https://<usuario>.github.io/sender/, así que
         # el base de Vite debe llevar ese prefijo. En dominio propio (sender.cl)
-        # se compila sin la variable y el base vuelve a ser "./".
+        # se compila sin la variable y el base vuelve a ser "/".
+        #
+        # "/" y no "./": con rutas profundas (/producto/x) las URL relativas se
+        # resuelven contra el directorio actual y romperían los <script> y
+        # <link> del HTML.
         env:
           VITE_BASE_PATH: '/sender/'
         run: npm run build
