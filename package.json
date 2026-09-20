@@ -11,7 +11,9 @@
     "preview": "vite preview",
     "assets": "python3 scripts/optimize-assets.py",
     "sitemap": "python3 scripts/build-sitemap.py",
-    "fixbase": "node scripts/fix-base.mjs"
+    "fixbase": "node scripts/fix-base.mjs",
+    "qa": "node qa/qa.mjs",
+    "qa:control": "node qa/probe-test.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",
@@ -31,6 +33,7 @@
     "@vitejs/plugin-react": "5.1.1",
     "tailwindcss": "4.1.17",
     "typescript": "5.9.3",
-    "vite": "7.3.2"
+    "vite": "7.3.2",
+    "playwright": "^1.63.0"
   }
 }
