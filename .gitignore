@@ -5,3 +5,6 @@ dist/
 
 # Artefactos del QA (capturas generadas)
 qa/shots/
+
+# Artefacto incremental de tsc
+*.tsbuildinfo
