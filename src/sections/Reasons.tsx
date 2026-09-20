@@ -92,7 +92,7 @@ function ReasonRow({
       style={reduced ? undefined : { y }}
     >
       <div className="grid items-baseline gap-x-8 gap-y-4 lg:grid-cols-[5rem_minmax(0,1fr)_minmax(0,26rem)]">
-        <span className="mono text-[0.625rem] text-faint transition-colors duration-500 group-hover:text-signal">
+        <span className="mono text-[0.625rem] text-faint transition-colors duration-500 group-hover:text-paper">
           {index}
         </span>
 

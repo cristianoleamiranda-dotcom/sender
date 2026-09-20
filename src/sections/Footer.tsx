@@ -78,7 +78,7 @@ export function Footer() {
                     to={`/productos/${category.slug}`}
                     className="group inline-flex items-baseline gap-3 text-[0.875rem] text-mute transition-colors duration-300 hover:text-paper"
                   >
-                    <span className="mono text-[0.5625rem] text-faint transition-colors group-hover:text-signal">
+                    <span className="mono text-[0.5625rem] text-faint transition-colors group-hover:text-paper">
                       {category.index[lang]}
                     </span>
                     {category.name[lang]}

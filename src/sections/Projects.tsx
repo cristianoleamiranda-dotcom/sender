@@ -81,7 +81,7 @@ export function Projects() {
                   href={current.source.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2.5 border border-line-strong px-4 py-2.5 font-mono text-[0.625rem] tracking-[0.18em] text-paper uppercase transition-colors duration-500 hover:border-signal hover:text-signal-soft"
+                  className="group inline-flex items-center gap-2.5 border border-line-strong px-4 py-2.5 font-mono text-[0.625rem] tracking-[0.18em] text-paper/90 uppercase transition-colors duration-500 hover:border-signal hover:text-signal-soft"
                 >
                   {t.projects.view}: {current.source.label[lang]}
                   <span aria-hidden="true" className="transition-transform duration-500 group-hover:translate-x-0.5">

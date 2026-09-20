@@ -144,9 +144,9 @@ function CardMedia({
       />
 
       <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-4 p-4">
-        <span className="mono text-[0.625rem] text-paper/70">{product.index[lang]}</span>
+        <span className="mono text-[0.625rem] text-paper/90">{product.index[lang]}</span>
         {category && (
-          <span className="label max-w-[18ch] truncate text-right text-paper/55">{category}</span>
+          <span className="label max-w-[18ch] truncate text-right text-paper/80">{category}</span>
         )}
       </div>
 
@@ -158,10 +158,10 @@ function CardMedia({
               key={`${row.k[lang]}-${row.v[lang]}`}
               className="flex items-baseline justify-between gap-4"
             >
-              <dt className="mono truncate text-[0.5625rem] tracking-[0.16em] text-paper/50 uppercase">
+              <dt className="mono truncate text-[0.5625rem] tracking-[0.16em] text-paper/80 uppercase">
                 {row.k[lang]}
               </dt>
-              <dd className="mono shrink-0 text-[0.625rem] text-paper/90">{row.v[lang]}</dd>
+              <dd className="mono shrink-0 text-[0.625rem] text-paper">{row.v[lang]}</dd>
             </div>
           ))}
         </dl>

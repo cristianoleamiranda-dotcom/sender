@@ -76,7 +76,7 @@ export function Signal() {
               className="label px-2 py-3 text-mute transition-colors duration-300 hover:text-signal-soft"
             >
               {t.transmission.title.join(" ")}
-              <span aria-hidden="true" className="ml-2 text-signal">↓</span>
+              <span aria-hidden="true" className="ml-2 text-signal-soft">↓</span>
             </button>
           </div>
         </div>
@@ -139,7 +139,7 @@ function StageRow({
       className="flex items-baseline gap-4"
       style={reduced ? undefined : { opacity, x }}
     >
-      <span aria-hidden="true" className="mono w-4 shrink-0 text-[0.625rem] text-signal">
+      <span aria-hidden="true" className="mono w-4 shrink-0 text-[0.625rem] text-signal-soft">
         {index}
       </span>
       <div>

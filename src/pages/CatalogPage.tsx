@@ -73,7 +73,7 @@ export default function CatalogPage() {
                 to={`/productos/${category.slug}`}
                 className="group flex h-full flex-col gap-3 bg-ink p-5 transition-colors duration-500 hover:bg-graphite"
               >
-                <span className="mono text-[0.625rem] text-signal">{category.index[lang]}</span>
+                <span className="mono text-[0.625rem] text-signal-soft">{category.index[lang]}</span>
                 <span className="display text-[clamp(1.05rem,2.2vw,1.5rem)] transition-colors duration-500 group-hover:text-signal-soft">
                   {category.name[lang]}
                 </span>

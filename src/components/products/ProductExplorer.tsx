@@ -126,12 +126,12 @@ function FilterChip({
       )}
     >
       {index && (
-        <span className={cn("text-[0.5625rem]", active ? "text-paper/70" : "text-faint")}>
+        <span className={cn("text-[0.5625rem]", active ? "text-paper" : "text-faint")}>
           {index}
         </span>
       )}
       {label}
-      <span className={cn("text-[0.5625rem]", active ? "text-paper/70" : "text-faint")}>
+      <span className={cn("text-[0.5625rem]", active ? "text-paper" : "text-faint")}>
         {String(count).padStart(2, "0")}
       </span>
     </button>

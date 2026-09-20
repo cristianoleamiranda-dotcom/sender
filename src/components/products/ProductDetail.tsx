@@ -109,7 +109,7 @@ export function ProductDetail({ product }: { product: Product }) {
                   href={product.sourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="label absolute right-0 bottom-0 p-4 text-paper/60 transition-colors duration-300 hover:text-signal-soft"
+                  className="label absolute right-0 bottom-0 p-4 text-paper/85 transition-colors duration-300 hover:text-signal-soft"
                 >
                   {t.productPage.source} ↗
                 </a>
@@ -148,7 +148,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 <ul className="mt-6 space-y-3.5">
                   {product.features.map((feature) => (
                     <li key={feature[lang]} className="flex items-start gap-3">
-                      <span aria-hidden="true" className="mono mt-0.5 text-[0.625rem] text-signal">
+                      <span aria-hidden="true" className="mono mt-0.5 text-[0.625rem] text-signal-soft">
                         —
                       </span>
                       <span className="text-[0.875rem] leading-relaxed text-mute">

@@ -104,7 +104,7 @@ export function Experience() {
                 aria-hidden="true"
                 className="absolute -top-px left-0 h-px w-0 bg-signal transition-[width] duration-700 ease-out group-hover:w-full"
               />
-              <span className="mono block text-[0.625rem] text-signal">{era.index}</span>
+              <span className="mono block text-[0.625rem] text-signal-soft">{era.index}</span>
               <span className="display mt-3 block text-[clamp(1.35rem,3vw,2rem)]">
                 {era.label}
               </span>

@@ -305,7 +305,7 @@ export function Automation() {
                 className="group border border-line bg-carbon p-5 transition-colors duration-500 hover:border-signal/50 hover:bg-graphite"
               >
                 <div className="flex items-baseline gap-4">
-                  <span className="mono text-[0.625rem] text-signal">{module.index}</span>
+                  <span className="mono text-[0.625rem] text-signal-soft">{module.index}</span>
                   <h3 className="display text-[clamp(1rem,2vw,1.35rem)] transition-colors duration-500 group-hover:text-signal-soft">
                     {module.title}
                   </h3>
