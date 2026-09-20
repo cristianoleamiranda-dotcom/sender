@@ -2,3 +2,9 @@ node_modules/
 dist/
 .DS_Store
 *.local
+
+# Artefactos del QA (capturas generadas)
+qa/shots/
+
+# Artefacto incremental de tsc
+*.tsbuildinfo

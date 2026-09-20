@@ -1,54 +1,66 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { siteContent, type SiteLanguage, type SiteContent } from "@/content/site";
+import { createContext, useContext, useState, useEffect, useMemo } from "react";
+import type { ReactNode } from "react";
+import { siteContent } from "@/content/site";
+import { resolve } from "@/content/resolve";
+import type { Lang, SiteCopy } from "@/content/types";
 
 interface LanguageContextValue {
-  lang: SiteLanguage;
-  setLang: (lang: SiteLanguage) => void;
-  t: SiteContent;
+  lang: Lang;
+  setLang: (lang: Lang) => void;
+  /** Todo el texto visible del sitio, ya resuelto al idioma activo. */
+  t: SiteCopy;
 }
+
+const STORAGE_KEY = "sender-lang";
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<SiteLanguage>(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("sender-lang");
-      if (stored === "es" || stored === "en") return stored;
-      const navLang = navigator.language?.toLowerCase() || "";
-      if (navLang.startsWith("es")) return "es";
-    }
-    return "es";
-  });
+function initialLang(): Lang {
+  if (typeof window === "undefined") return "es";
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (stored === "es" || stored === "en") return stored;
+  } catch {
+    /* almacenamiento no disponible: seguir con la detección */
+  }
+  const nav = (window.navigator.language ?? "").toLowerCase();
+  // Chile es el mercado principal: todo lo que no sea inglés explícito cae en ES.
+  return nav.startsWith("en") ? "en" : "es";
+}
 
-  const setLang = (nextLang: SiteLanguage) => {
-    setLangState(nextLang);
-    try {
-      localStorage.setItem("sender-lang", nextLang);
-      document.documentElement.lang = nextLang;
-    } catch {}
-  };
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [lang, setLangState] = useState<Lang>(initialLang);
+
+  const setLang = (next: Lang) => setLangState(next);
 
   useEffect(() => {
     document.documentElement.lang = lang;
+    try {
+      window.localStorage.setItem(STORAGE_KEY, lang);
+    } catch {
+      /* ignorar: modo privado o almacenamiento bloqueado */
+    }
   }, [lang]);
 
-  const value: LanguageContextValue = {
-    lang,
-    setLang,
-    t: siteContent[lang] as unknown as SiteContent,
-  };
+  // Se resuelve una sola vez por cambio de idioma, no en cada render.
+  const t = useMemo(() => resolve(siteContent, lang), [lang]);
+
+  const value = useMemo<LanguageContextValue>(
+    () => ({ lang, setLang, t }),
+    [lang, t],
+  );
 
   return (
-    <LanguageContext.Provider value={value}>
-      {children}
-    </LanguageContext.Provider>
+    <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
   );
 }
 
 export function useLang(): LanguageContextValue {
   const ctx = useContext(LanguageContext);
   if (!ctx) {
-    throw new Error("useLang must be used within a LanguageProvider");
+    throw new Error("useLang debe usarse dentro de <LanguageProvider>");
   }
   return ctx;
 }
+
+export type { Lang };

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# El sitio es una SPA de rutas limpias: todo el contenido es indexable.
+# No se bloquea ningún recurso necesario para el renderizado.
+
+Sitemap: https://www.sender.cl/sitemap.xml

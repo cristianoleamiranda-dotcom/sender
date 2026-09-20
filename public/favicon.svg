@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Marca mínima: fondo tinta, monograma S y el punto de señal.
+       SVG para que el favicon no se pixele en pantallas de alta densidad. -->
+  <rect width="64" height="64" rx="13" fill="#08090a"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="11.5" fill="none" stroke="#1e73be" stroke-opacity="0.55" stroke-width="3"/>
+  <path d="M43 21.5c-2.6-3.3-6.8-5.2-11.5-5.2-7.6 0-12.8 4.1-12.8 9.9 0 5.3 3.9 8 12.1 9.8 6.6 1.5 9 3.1 9 6.2 0 3.4-3.3 5.7-8.4 5.7-4.9 0-9-2.1-11.7-5.6"
+        fill="none" stroke="#f2f4f6" stroke-width="5.5" stroke-linecap="round"/>
+  <circle cx="47.5" cy="45.5" r="5" fill="#1e73be"/>
+</svg>

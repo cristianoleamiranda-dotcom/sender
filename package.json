@@ -1,12 +1,21 @@
 {
-  "name": "react-vite-tailwind",
+  "name": "sender-chile",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "description": "SENDER Chile — Tecnología que transmite. Ingeniería RF, radiodifusión y telecomunicaciones.",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "npm run guard && tsc -b && vite build && npm run sitemap && npm run fixbase",
+    "typecheck": "tsc -b --force",
+    "preview": "vite preview",
+    "assets": "python3 scripts/optimize-assets.py",
+    "sitemap": "python3 scripts/build-sitemap.py",
+    "fixbase": "node scripts/fix-base.mjs",
+    "qa": "node qa/qa.mjs",
+    "qa:control": "node qa/probe-test.mjs",
+    "guard": "node qa/no-opacity-text.mjs",
+    "serve": "node scripts/serve-dist.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",
@@ -15,6 +24,7 @@
     "motion": "^13.2.0",
     "react": "19.2.6",
     "react-dom": "19.2.6",
+    "react-router-dom": "^7.18.4",
     "tailwind-merge": "3.4.0"
   },
   "devDependencies": {
@@ -26,6 +36,6 @@
     "tailwindcss": "4.1.17",
     "typescript": "5.9.3",
     "vite": "7.3.2",
-    "vite-plugin-singlefile": "2.3.0"
+    "playwright": "^1.63.0"
   }
 }

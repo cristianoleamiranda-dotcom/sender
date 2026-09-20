@@ -1,26 +1,45 @@
-import { motion, type Variants } from "motion/react";
 import type { ReactNode, ElementType } from "react";
+import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
+import { useRef } from "react";
 import { cn } from "@/utils/cn";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-const EASE = [0.16, 1, 0.3, 1] as const;
+/** Curva insignia del sistema: salida exponencial, sin rebote. */
+export const EASE = [0.16, 1, 0.3, 1] as const;
 
 interface RevealProps {
   children: ReactNode;
   className?: string;
   delay?: number;
   y?: number;
+  x?: number;
   once?: boolean;
-  as?: ElementType;
   amount?: number;
 }
 
-/** Fade + rise on enter. */
-export function Reveal({ children, className, delay = 0, y = 28, once = true, amount = 0.3 }: RevealProps) {
+/**
+ * Desplazamiento al entrar en viewport.
+ *
+ * Sin fundido de opacidad a propósito: este componente envuelve texto, y
+ * animar `opacity` desde 0 deja el contenido por debajo de 4.5:1 durante la
+ * transición (Lighthouse lo reporta como fallo de contraste). El revelado se
+ * sostiene solo con el desplazamiento, que es igual de legible y no degrada
+ * nunca el contraste. Para máscaras tipográficas está `RevealLines`.
+ */
+export function Reveal({
+  children,
+  className,
+  delay = 0,
+  y = 28,
+  x = 0,
+  once = true,
+  amount = 0.3,
+}: RevealProps) {
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ y, x }}
+      whileInView={{ y: 0, x: 0 }}
       viewport={{ once, amount }}
       transition={{ duration: 1, ease: EASE, delay }}
     >
@@ -29,34 +48,47 @@ export function Reveal({ children, className, delay = 0, y = 28, once = true, am
   );
 }
 
-/** Line-by-line masked text reveal, for large display headlines. */
+/**
+ * Revelado por líneas con máscara: cada línea sube desde abajo de su
+ * propio recorte. Es el recurso tipográfico principal del sitio.
+ */
 export function RevealLines({
   lines,
   className,
   lineClassName,
   delay = 0,
+  stagger = 0.11,
   as: Tag = "h2",
+  id,
 }: {
   lines: readonly string[];
   className?: string;
   lineClassName?: string;
   delay?: number;
+  stagger?: number;
   as?: ElementType;
+  id?: string;
 }) {
-  const container: Variants = {
-    hidden: {},
-    show: { transition: { staggerChildren: 0.12, delayChildren: delay } },
-  };
-  const line: Variants = {
-    hidden: { y: "110%" },
-    show: { y: "0%", transition: { duration: 1.1, ease: EASE } },
-  };
   return (
-    <motion.div initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.4 }} variants={container}>
-      <Tag className={className}>
+    <motion.div
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.35 }}
+      variants={{
+        hidden: {},
+        show: { transition: { staggerChildren: stagger, delayChildren: delay } },
+      }}
+    >
+      <Tag id={id} className={className}>
         {lines.map((l, i) => (
-          <span key={i} className="block overflow-hidden pb-[0.08em] -mb-[0.08em]">
-            <motion.span variants={line} className={cn("block will-change-transform", lineClassName)}>
+          <span key={i} className="block overflow-hidden pb-[0.1em] -mb-[0.1em]">
+            <motion.span
+              variants={{
+                hidden: { y: "108%" },
+                show: { y: "0%", transition: { duration: 1.05, ease: EASE } },
+              }}
+              className={cn("block will-change-transform", lineClassName)}
+            >
               {l}
             </motion.span>
           </span>
@@ -66,21 +98,96 @@ export function RevealLines({
   );
 }
 
-/** Image with a clip-path curtain reveal + subtle scale settle. */
+/**
+ * Revelado palabra por palabra, ligado al scroll del contenedor.
+ * Se usa para el texto largo de "La señal": nunca aparece como bloque.
+ *
+ * Dos límites deliberados:
+ *   - El suelo de opacidad es 0.5, no 0.14. Con 0.14 el texto quedaba en
+ *     #242527 sobre #08090a (1.29:1) y Lighthouse lo reportaba como fallo de
+ *     contraste: el efecto se mantiene pero el párrafo es legible en todo
+ *     momento, incluso si el usuario no llega a hacer scroll.
+ *   - Con `prefers-reduced-motion` no hay texto ligado al scroll: se renderiza
+ *     el párrafo completo y visible.
+ */
+export function RevealOnScroll({
+  text,
+  className,
+  wordClassName,
+  as: Tag = "p",
+}: {
+  text: string;
+  className?: string;
+  wordClassName?: string;
+  as?: ElementType;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref as React.RefObject<HTMLElement>,
+    offset: ["start 0.85", "start 0.25"],
+  });
+
+  if (reduced) return <Tag className={className}>{text}</Tag>;
+
+  const words = text.split(" ");
+
+  return (
+    <Tag ref={ref as never} className={className}>
+      {words.map((word, i) => {
+        const start = i / words.length;
+        const end = start + 1.6 / words.length;
+        return (
+          <Word key={`${word}-${i}`} range={[start, end]} progress={scrollYProgress}>
+            <span className={wordClassName}>{word}</span>
+          </Word>
+        );
+      })}
+    </Tag>
+  );
+}
+
+function Word({
+  children,
+  progress,
+  range,
+}: {
+  children: ReactNode;
+  progress: MotionValue<number>;
+  range: [number, number];
+}) {
+  const opacity = useTransform(progress, range, [0.56, 1]);
+  return (
+    <motion.span style={{ opacity }} className="inline-block will-change-[opacity]">
+      {children}{" "}
+    </motion.span>
+  );
+}
+
+/**
+ * Imagen con cortina + asentado de escala, servida con srcset responsive.
+ * `srcSet` proviene de `src/content/images.ts`, derivado de fotos reales.
+ */
 export function RevealImage({
   src,
+  srcSet,
+  sizes,
   alt,
   className,
   imgClassName,
   delay = 0,
   loading = "lazy",
+  priority = false,
 }: {
   src: string;
+  srcSet?: string;
+  sizes?: string;
   alt: string;
   className?: string;
   imgClassName?: string;
   delay?: number;
   loading?: "lazy" | "eager";
+  priority?: boolean;
 }) {
   return (
     <motion.div
@@ -91,21 +198,50 @@ export function RevealImage({
     >
       <motion.img
         src={src}
+        srcSet={srcSet}
+        sizes={sizes}
         alt={alt}
-        loading={loading}
+        loading={priority ? "eager" : loading}
         decoding="async"
+        fetchPriority={priority ? "high" : "auto"}
         className={cn("h-full w-full object-cover", imgClassName)}
-        variants={{ hidden: { scale: 1.16 }, show: { scale: 1 } }}
-        transition={{ duration: 1.8, ease: EASE, delay }}
+        variants={{ hidden: { scale: 1.14 }, show: { scale: 1 } }}
+        transition={{ duration: 1.7, ease: EASE, delay }}
       />
-      {/* Curtain: slides up to reveal the photograph */}
       <motion.div
         aria-hidden="true"
         className="absolute inset-0 origin-top bg-ink"
         variants={{ hidden: { scaleY: 1 }, show: { scaleY: 0 } }}
-        transition={{ duration: 1.2, ease: EASE, delay }}
+        transition={{ duration: 1.1, ease: EASE, delay }}
         style={{ transformOrigin: "top" }}
       />
     </motion.div>
+  );
+}
+
+/** Línea técnica que se dibuja sola al entrar en viewport. */
+export function DrawLine({
+  className,
+  delay = 0,
+  vertical = false,
+}: {
+  className?: string;
+  delay?: number;
+  vertical?: boolean;
+}) {
+  const hidden = vertical ? { scaleY: 0 } : { scaleX: 0 };
+  return (
+    <motion.span
+      aria-hidden="true"
+      className={cn(
+        "block bg-signal",
+        vertical ? "h-full w-px origin-top" : "h-px w-full origin-left",
+        className,
+      )}
+      initial={hidden}
+      whileInView={vertical ? { scaleY: 1 } : { scaleX: 1 }}
+      viewport={{ once: true, amount: 0.6 }}
+      transition={{ duration: 1.3, ease: EASE, delay }}
+    />
   );
 }

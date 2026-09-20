@@ -1,9 +1,19 @@
 name: Deploy to GitHub Pages
 
+# Antes este workflow se disparaba con `main` Y con `arena/01a0afb6-sender`.
+# Como ambos publican al MISMO entorno `github-pages`, el último push ganaba:
+# un push a la rama de trabajo pisaba la producción. Ahora la rama de trabajo
+# se puede verificar en local (`npm run build && npm run preview`) o con
+# `workflow_dispatch`, sin tocar lo publicado.
 on:
   push:
-    branches: ['main', 'arena/01a0afb6-sender']
+    branches: ['main']
   workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Rama a publicar (por defecto, la que dispara el workflow)'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -20,21 +30,43 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
+
       - name: Install dependencies
         run: npm ci
+
+      # Verificación de tipos ANTES de compilar. Sin este paso el build pasaba
+      # en verde con errores de TypeScript, porque `vite build` solo transpila.
+      - name: Typecheck
+        run: npx tsc -b --force
+
       - name: Build
+        # El sitio se publica bajo https://<usuario>.github.io/sender/, así que
+        # el base de Vite debe llevar ese prefijo. En dominio propio (sender.cl)
+        # se compila sin la variable y el base vuelve a ser "/".
+        #
+        # "/" y no "./": con rutas profundas (/producto/x) las URL relativas se
+        # resuelven contra el directorio actual y romperían los <script> y
+        # <link> del HTML.
+        env:
+          VITE_BASE_PATH: '/sender/'
         run: npm run build
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
+
   deploy:
     needs: build
     runs-on: ubuntu-latest

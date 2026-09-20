@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex,follow" />
+    <title>Sender — redirigiendo</title>
+    <!--
+      Respaldo para rutas profundas en GitHub Pages.
+
+      Pages no tiene reescritura SPA: devuelve 404 para /sender/productos/x.
+      Este archivo reconstruye la ruta original y la entrega a index.html, que
+      la enruta con react-router. Vite reemplaza __BASE_PATH__ por el `base`
+      real del build en los archivos de public/, así que funciona igual en la
+      raíz de un dominio y bajo /sender/.
+
+      En sender.cl este archivo no interviene: el servidor debe reescribir
+      cualquier ruta a index.html (regla habitual de SPA).
+    -->
+    <script>
+      (function () {
+        var base = "__BASE_PATH__";
+        if (base.charAt(base.length - 1) !== "/") base += "/";
+
+        var path = window.location.pathname;
+        var search = window.location.search;
+        var hash = window.location.hash;
+
+        // Recorta el prefijo de base si Pages sirvió esto desde /sender/…
+        if (base !== "/" && path.indexOf(base) === 0) {
+          path = "/" + path.slice(base.length);
+        }
+
+        var target = base + "?redirect=" + encodeURIComponent(path + search) + hash;
+        window.location.replace(target);
+      })();
+    </script>
+  </head>
+  <body>
+    <p style="font-family: monospace; padding: 2rem; color: #9ba3ab">
+      SENDER — redirigiendo…
+    </p>
+  </body>
+</html>
