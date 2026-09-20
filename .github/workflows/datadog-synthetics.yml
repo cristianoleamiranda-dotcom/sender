@@ -23,6 +23,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # La plantilla de Datadog tal cual se generó falla en CADA pull request y en
+    # cada push a main con "Missing API or APP keys to initialize datadog-ci!",
+    # porque los secrets no están configurados. Un check permanentemente en rojo
+    # no informa de nada y puede llegar a bloquear la fusión.
+    #
+    # Con el guarda el job se omite en vez de fallar. En cuanto se añadan
+    # DD_API_KEY y DD_APP_KEY en Settings -> Secrets and variables -> Actions
+    # empieza a ejecutarse solo, sin tocar nada más. Hace falta además tener
+    # tests sintéticos etiquetados `e2e-tests`.
+    #
+    # El secret se expone como env del job porque el contexto `secrets` no está
+    # disponible en `jobs.<id>.if`.
+    if: ${{ env.DD_API_KEY != '' }}
+    env:
+      DD_API_KEY: ${{ secrets.DD_API_KEY }}
+
     steps:
     - uses: actions/checkout@v4
 
