@@ -131,22 +131,38 @@ function StageRow({
   position: number;
   reduced: boolean;
 }) {
-  const opacity = useTransform(progress, [position * 0.6, position * 0.6 + 0.35], [0.3, 1]);
-  const x = useTransform(progress, [position * 0.6, position * 0.6 + 0.35], [-8, 0]);
+  /*
+    La etapa se "enciende" al llegar el scroll, pero nunca animando opacidad:
+    con un suelo de 0.3 el nombre quedaba en 2.58:1 y el texto en 1.94:1, y
+    como el efecto va ligado al scroll ese estado bajo no es transitorio sino
+    el reposo de las etapas que todavía no se recorrieron. Se anima el color,
+    de un gris del sistema al color final: ambos extremos cumplen WCAG AA
+    (mute 8.2:1, paper 19.4:1, faint 6.9:1 sobre tinta).
+  */
+  // `InputRange` de Motion es mutable: por eso el tipo explícito y no `as const`.
+  const range: [number, number] = [position * 0.6, position * 0.6 + 0.35];
+  const nameColor = useTransform(progress, range, ["#9ba3ab", "#ffffff"]);
+  const textColor = useTransform(progress, range, ["#8a949b", "#c7ced3"]);
+  const x = useTransform(progress, range, [-8, 0]);
 
   return (
-    <motion.li
-      className="flex items-baseline gap-4"
-      style={reduced ? undefined : { opacity, x }}
-    >
+    <motion.li className="flex items-baseline gap-4" style={reduced ? undefined : { x }}>
       <span aria-hidden="true" className="mono w-4 shrink-0 text-[0.625rem] text-signal-soft">
         {index}
       </span>
       <div>
-        <span className="mono block text-[0.6875rem] tracking-[0.2em] text-paper uppercase">
+        <motion.span
+          className={cn("mono block text-[0.6875rem] tracking-[0.2em] uppercase", reduced && "text-paper")}
+          style={reduced ? undefined : { color: nameColor }}
+        >
           {name}
-        </span>
-        <span className="mt-1 block text-[0.8125rem] leading-relaxed text-faint">{text}</span>
+        </motion.span>
+        <motion.span
+          className={cn("mt-1 block text-[0.8125rem] leading-relaxed", reduced && "text-faint")}
+          style={reduced ? undefined : { color: textColor }}
+        >
+          {text}
+        </motion.span>
       </div>
     </motion.li>
   );

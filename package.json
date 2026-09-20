@@ -6,14 +6,15 @@
   "description": "SENDER Chile — Tecnología que transmite. Ingeniería RF, radiodifusión y telecomunicaciones.",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && npm run sitemap && npm run fixbase",
+    "build": "npm run guard && tsc -b && vite build && npm run sitemap && npm run fixbase",
     "typecheck": "tsc -b --force",
     "preview": "vite preview",
     "assets": "python3 scripts/optimize-assets.py",
     "sitemap": "python3 scripts/build-sitemap.py",
     "fixbase": "node scripts/fix-base.mjs",
     "qa": "node qa/qa.mjs",
-    "qa:control": "node qa/probe-test.mjs"
+    "qa:control": "node qa/probe-test.mjs",
+    "guard": "node qa/no-opacity-text.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",

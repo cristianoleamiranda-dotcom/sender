@@ -2,6 +2,7 @@ import type { ReactNode, ElementType } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
 import { useRef } from "react";
 import { cn } from "@/utils/cn";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 /** Curva insignia del sistema: salida exponencial, sin rebote. */
 export const EASE = [0.16, 1, 0.3, 1] as const;
@@ -16,7 +17,15 @@ interface RevealProps {
   amount?: number;
 }
 
-/** Fundido + desplazamiento al entrar en viewport. */
+/**
+ * Desplazamiento al entrar en viewport.
+ *
+ * Sin fundido de opacidad a propósito: este componente envuelve texto, y
+ * animar `opacity` desde 0 deja el contenido por debajo de 4.5:1 durante la
+ * transición (Lighthouse lo reporta como fallo de contraste). El revelado se
+ * sostiene solo con el desplazamiento, que es igual de legible y no degrada
+ * nunca el contraste. Para máscaras tipográficas está `RevealLines`.
+ */
 export function Reveal({
   children,
   className,
@@ -29,8 +38,8 @@ export function Reveal({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y, x }}
-      whileInView={{ opacity: 1, y: 0, x: 0 }}
+      initial={{ y, x }}
+      whileInView={{ y: 0, x: 0 }}
       viewport={{ once, amount }}
       transition={{ duration: 1, ease: EASE, delay }}
     >
@@ -92,6 +101,14 @@ export function RevealLines({
 /**
  * Revelado palabra por palabra, ligado al scroll del contenedor.
  * Se usa para el texto largo de "La señal": nunca aparece como bloque.
+ *
+ * Dos límites deliberados:
+ *   - El suelo de opacidad es 0.5, no 0.14. Con 0.14 el texto quedaba en
+ *     #242527 sobre #08090a (1.29:1) y Lighthouse lo reportaba como fallo de
+ *     contraste: el efecto se mantiene pero el párrafo es legible en todo
+ *     momento, incluso si el usuario no llega a hacer scroll.
+ *   - Con `prefers-reduced-motion` no hay texto ligado al scroll: se renderiza
+ *     el párrafo completo y visible.
  */
 export function RevealOnScroll({
   text,
@@ -105,10 +122,13 @@ export function RevealOnScroll({
   as?: ElementType;
 }) {
   const ref = useRef<HTMLElement>(null);
+  const reduced = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref as React.RefObject<HTMLElement>,
     offset: ["start 0.85", "start 0.25"],
   });
+
+  if (reduced) return <Tag className={className}>{text}</Tag>;
 
   const words = text.split(" ");
 
@@ -136,7 +156,7 @@ function Word({
   progress: MotionValue<number>;
   range: [number, number];
 }) {
-  const opacity = useTransform(progress, range, [0.14, 1]);
+  const opacity = useTransform(progress, range, [0.56, 1]);
   return (
     <motion.span style={{ opacity }} className="inline-block will-change-[opacity]">
       {children}{" "}

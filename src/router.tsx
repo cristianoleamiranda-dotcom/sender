@@ -7,7 +7,17 @@ import {
 } from "react-router-dom";
 import { Shell } from "./App";
 
-const HomePage = lazy(() => import("@/pages/HomePage"));
+/**
+ * La home NO va en diferido.
+ *
+ * Con `lazy()` el primer pintado mostraba el fallback de 60vh y, al llegar el
+ * chunk, la página real (19.800 px de alto) empujaba el footer fuera del
+ * viewport: CLS 0.40 medido con Lighthouse. La home es la ruta de entrada de
+ * casi todo el tráfico, así que se sirve con el bundle principal (60 kB sin
+ * comprimir) y el code splitting queda para las rutas secundarias.
+ */
+import HomePage from "@/pages/HomePage";
+
 const CatalogPage = lazy(() => import("@/pages/CatalogPage"));
 const CategoryPage = lazy(() => import("@/pages/CategoryPage"));
 const ProductPage = lazy(() => import("@/pages/ProductPage"));

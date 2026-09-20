@@ -124,8 +124,8 @@ export function Engineering() {
                 )}
               >
                 <motion.div
-                  initial={reduced ? false : { opacity: 0, y: 26 }}
-                  whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+                  initial={reduced ? false : { y: 26 }}
+                  whileInView={reduced ? undefined : { y: 0 }}
                   viewport={{ once: true, amount: 0.4 }}
                   transition={{ duration: 0.9, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
                 >

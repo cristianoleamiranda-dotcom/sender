@@ -91,6 +91,18 @@
         link.fetchPriority = "high";
         link.href = base + "assets/hero-poster-" + w + ".webp";
         document.head.appendChild(link);
+
+        /*
+          Favicon. Se inyecta aquí por la misma razón que la precarga: su ruta
+          depende del base del build. Sin esto el navegador pedía /favicon.ico
+          en la raíz y se llevaba un 404, que Lighthouse reporta como error de
+          consola.
+        */
+        var icon = document.createElement("link");
+        icon.rel = "icon";
+        icon.type = "image/svg+xml";
+        icon.href = base + "favicon.svg";
+        document.head.appendChild(icon);
       })();
     </script>
 

@@ -35,14 +35,24 @@ export function Shell() {
   );
 }
 
+/**
+ * Estado interino mientras llega el chunk de una ruta diferida.
+ *
+ * Reserva el alto del viewport a propósito: con `min-h-[60vh]` el contenido
+ * real aparecía más alto y empujaba el footer fuera de pantalla, lo que
+ * Lighthouse medía como CLS 0.40 en `/productos`. Ocupando 100vh el footer
+ * queda debajo del pliegue y el salto deja de ser visible.
+ *
+ * La home no pasa por aquí: se importa de forma síncrona en `src/router.tsx`.
+ */
 function RouteFallback() {
   return (
     <div
-      className="flex min-h-[60vh] items-center justify-center bg-ink"
+      className="flex min-h-screen items-center justify-center bg-ink"
       aria-busy="true"
       role="status"
     >
-      <span className="label">SENDER</span>
+      <span className="label animate-pulse">SENDER</span>
     </div>
   );
 }

@@ -99,8 +99,8 @@ function ReasonRow({
         <motion.h3
           className="display text-[clamp(2rem,8vw,6rem)] transition-colors duration-500 group-hover:text-signal-soft"
           style={reduced ? undefined : { letterSpacing: tracking }}
-          initial={reduced ? false : { opacity: 0.15 }}
-          whileInView={reduced ? undefined : { opacity: 1 }}
+          initial={reduced ? false : { color: "#6f787e" }}
+          whileInView={reduced ? undefined : { color: "#e4e8eb" }}
           viewport={{ once: true, amount: 0.6 }}
           transition={{ duration: 1.1, delay, ease: [0.16, 1, 0.3, 1] }}
         >
@@ -109,8 +109,8 @@ function ReasonRow({
 
         <motion.p
           className="text-[0.875rem] leading-relaxed text-mute lg:pb-3"
-          initial={reduced ? false : { opacity: 0, y: 16 }}
-          whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+          initial={reduced ? false : { y: 16 }}
+          whileInView={reduced ? undefined : { y: 0 }}
           viewport={{ once: true, amount: 0.6 }}
           transition={{ duration: 0.9, delay: delay + 0.15, ease: [0.16, 1, 0.3, 1] }}
         >

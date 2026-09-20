@@ -95,8 +95,8 @@ export function Experience() {
             <motion.li
               key={era.label}
               className="group relative border-t border-line pt-6 pr-6"
-              initial={reduced ? false : { opacity: 0, y: 24 }}
-              whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+              initial={reduced ? false : { y: 24 }}
+              whileInView={reduced ? undefined : { y: 0 }}
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.9, delay: i * 0.09, ease: [0.16, 1, 0.3, 1] }}
             >
@@ -155,10 +155,9 @@ function Counter({
         style={{
           fontSize: "clamp(6rem, 26vw, 22rem)",
           letterSpacing: "-0.06em",
-          opacity: reduced ? 1 : undefined,
         }}
-        initial={reduced ? false : { opacity: 0, y: 40 }}
-        whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+        initial={reduced ? false : { y: 40 }}
+        whileInView={reduced ? undefined : { y: 0 }}
         viewport={{ once: true, amount: 0.5 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
       >
@@ -207,8 +206,8 @@ function DomainModule({
         "group relative bg-carbon px-0 py-8 transition-colors duration-500 hover:bg-graphite",
         "cursor-default sm:px-6 sm:first:pl-0",
       )}
-      initial={reduced ? false : { opacity: 0, y: 34 }}
-      whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+      initial={reduced ? false : { y: 34 }}
+      whileInView={reduced ? undefined : { y: 0 }}
       viewport={{ once: true, amount: 0.35 }}
       transition={{ duration: 1, delay, ease: [0.16, 1, 0.3, 1] }}
     >
