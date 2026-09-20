@@ -1,77 +1,271 @@
+/* ================================================================
+   SENDER — DESIGN SYSTEM
+   Dark technology · industrial premium · engineering · broadcasting
+   Tailwind CSS v4 (configuración CSS-first, sin tailwind.config.js)
+   ================================================================ */
+
 @import "tailwindcss";
 
+/* ----------------------------------------------------------------
+   TOKENS
+   Paleta autorizada: #FFFFFF · #1E73BE · #494949 · #0085B2
+   + negros/grafitos técnicos derivados. Nada de purple, pink,
+   orange, yellow, gold ni gradientes multicolor.
+   ---------------------------------------------------------------- */
 @theme {
-  --color-brand-white: #ffffff;
-  --color-brand-blue: #1e73be;
-  --color-brand-gray: #494949;
-  --color-brand-cyan: #0085b2;
+  /* Superficies */
+  --color-void: #050708;
+  --color-ink: #08090a;
+  --color-carbon: #0d0f11;
+  --color-graphite: #14171a;
+  --color-graphite-2: #1b1f23;
+  --color-steel: #2a2f35;
+  --color-ash: #494949;
 
-  --font-sans: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  /* Texto */
+  --color-paper: #ffffff;
+  --color-mute: #9ba3ab;
+  --color-faint: #61696f;
+
+  /* Señal (marca) */
+  --color-signal: #1e73be;
+  --color-signal-soft: #4f9ad8;
+  --color-signal-deep: #0085b2;
+  --color-line: rgba(255, 255, 255, 0.09);
+  --color-line-strong: rgba(255, 255, 255, 0.18);
+
+  /* Tipografía
+     Stack nativo: cero bytes de red, cero bloqueo de render.
+     En macOS resuelve Helvetica Neue (tipografía del sistema Sender);
+     en Windows/Android cae a Inter/Roboto, que comparten métricas
+     compatibles con la escala display compacta. */
+  --font-sans: "Helvetica Neue", "Inter", "Segoe UI Variable Text", "Segoe UI",
+    system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo,
+    Consolas, "Liberation Mono", monospace;
+
+  /* Escala display editorial (títulos gigantes y compactos) */
+  --text-display-xs: clamp(1.9rem, 5.2vw, 3rem);
+  --text-display-sm: clamp(2.4rem, 7vw, 4.5rem);
+  --text-display: clamp(3rem, 9.5vw, 7rem);
+  --text-display-lg: clamp(3.6rem, 13vw, 11rem);
+  --text-display-xl: clamp(4.2rem, 17vw, 16rem);
+
+  /* Curvas y ritmos del motion system */
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-signal: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
+/* ----------------------------------------------------------------
+   BASE
+   ---------------------------------------------------------------- */
 @layer base {
   html {
-    background-color: #ffffff;
-    color: #494949;
+    background-color: var(--color-ink);
+    color: var(--color-mute);
     font-family: var(--font-sans);
-    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    -moz-osx-font-display: grayscale;
+    text-size-adjust: 100%;
   }
 
   body {
     margin: 0;
-    padding: 0;
-    overflow-x: hidden;
+    background-color: var(--color-ink);
+    color: var(--color-mute);
     font-family: var(--font-sans);
-    color: #494949;
-    background: #ffffff;
+    overflow-x: hidden;
+    font-synthesis-weight: none;
+  }
+
+  /* Lenis toma el control del scroll; no duplicar con scroll-behavior. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--color-paper);
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   ::selection {
-    background: #1e73be;
+    background: var(--color-signal);
     color: #ffffff;
   }
 
   :focus-visible {
-    outline: 2px solid #1e73be;
+    outline: 2px solid var(--color-signal-soft);
     outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
+/* ----------------------------------------------------------------
+   UTILIDADES TIPOGRÁFICAS
+   El contraste del sitio vive aquí: DISPLAY enorme y compacto
+   contra TECHNICAL INFORMATION pequeña, monoespaciada y espaciada.
+   ---------------------------------------------------------------- */
 @layer utilities {
-  .hero {
-    container-type: inline-size;
+  /* Display: títulos gigantes, bold, compactos, editoriales */
+  .display {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    line-height: 0.86;
+    letter-spacing: -0.045em;
+    color: var(--color-paper);
+    text-transform: uppercase;
   }
 
+  .display-light {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    color: var(--color-paper);
+    text-transform: uppercase;
+  }
+
+  /* Etiqueta técnica: pequeña, mono, uppercase, muy espaciada */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-faint);
+    font-weight: 400;
+  }
+
+  .label-signal {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-signal-soft);
+    font-weight: 500;
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+
+  /* Cuerpo técnico: pequeño, limpio, muy legible */
+  .body-tech {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--color-mute);
+  }
+
+  .lead {
+    font-size: clamp(1.0625rem, 1.6vw, 1.375rem);
+    line-height: 1.55;
+    letter-spacing: -0.011em;
+    color: #cdd4da;
+  }
+
+  /* Wordmark del hero, gobernado por container query */
   .hero-wordmark {
-    font-size: clamp(4rem, 16cqw, 17rem);
+    font-size: clamp(3.75rem, 17cqw, 16rem);
     line-height: 0.78;
     letter-spacing: -0.055em;
-    font-weight: 500;
+    font-weight: 700;
     white-space: nowrap;
-    color: #494949;
+    color: var(--color-paper);
   }
 
-  .hero-fade {
-    background: linear-gradient(
-      to bottom,
-      #ffffff 0%,
-      rgba(255, 255, 255, 0.82) 28%,
-      rgba(255, 255, 255, 0.42) 60%,
-      rgba(255, 255, 255, 0) 100%
-    );
+  .hairline {
+    border-color: var(--color-line);
+  }
+
+  .grid-tech {
+    background-image: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.035) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+
+  .noise {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
   }
 }
 
+/* ----------------------------------------------------------------
+   KEYFRAMES DE SEÑAL
+   Reutilizables por las visualizaciones de onda, barrido y enlace.
+   ---------------------------------------------------------------- */
 @keyframes ping-signal {
   0% {
     transform: scale(0.4);
-    opacity: 0.8;
+    opacity: 0.75;
   }
   100% {
     transform: scale(2.6);
     opacity: 0;
+  }
+}
+
+@keyframes sweep-line {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -240;
+  }
+}
+
+@keyframes pulse-node {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes carrier-drift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -240px 0;
   }
 }
