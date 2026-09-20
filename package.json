@@ -14,7 +14,8 @@
     "fixbase": "node scripts/fix-base.mjs",
     "qa": "node qa/qa.mjs",
     "qa:control": "node qa/probe-test.mjs",
-    "guard": "node qa/no-opacity-text.mjs"
+    "guard": "node qa/no-opacity-text.mjs",
+    "serve": "node scripts/serve-dist.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",

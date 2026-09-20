@@ -263,7 +263,7 @@ export function Solutions() {
             onClick={() => go("/#contacto")}
             className="label text-mute transition-colors duration-300 hover:text-signal-soft"
           >
-            {t.solutions.consult} →
+            {`${t.solutions.consult} →`}
           </button>
         </div>
 

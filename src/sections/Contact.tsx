@@ -156,7 +156,7 @@ export function Contact() {
                   rel="noopener noreferrer"
                   className="label mt-3 inline-flex items-center gap-2 text-mute transition-colors duration-300 hover:text-signal-soft"
                 >
-                  {t.contact.labels.map} ↗
+                  {`${t.contact.labels.map} ↗`}
                 </a>
               </ContactRow>
 

@@ -74,7 +74,7 @@ export function ProductDetail({ product }: { product: Product }) {
 
           {category && (
             <p className="label mt-5">
-              {t.productPage.category}: {category.name[lang]} · {category.kicker[lang]}
+              {`${t.productPage.category}: ${category.name[lang]} · ${category.kicker[lang]}`}
             </p>
           )}
         </div>
@@ -111,7 +111,7 @@ export function ProductDetail({ product }: { product: Product }) {
                   rel="noopener noreferrer"
                   className="label absolute right-0 bottom-0 p-4 text-paper/85 transition-colors duration-300 hover:text-signal-soft"
                 >
-                  {t.productPage.source} ↗
+                  {`${t.productPage.source} ↗`}
                 </a>
               )}
             </div>
@@ -182,7 +182,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 to="/productos"
                 className="label transition-colors duration-300 hover:text-signal-soft"
               >
-                {t.catalogPage.allProducts} →
+                {`${t.catalogPage.allProducts} →}`}
               </Link>
             </div>
 

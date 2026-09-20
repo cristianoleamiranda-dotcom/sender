@@ -39,7 +39,10 @@ export function Footer() {
             </p>
 
             <p className="label mt-6 max-w-[34ch] leading-relaxed">
-              {company.address.street} · {company.address.commune} · {company.address.city}
+              {/* Un solo nodo de texto. Interpolar `{a} · {b} · {c}` genera
+                  varios nodos hermanos y la hidratación del prerender se
+                  desajusta en el primero. */}
+              {`${company.address.street} · ${company.address.commune} · ${company.address.city}`}
             </p>
           </div>
 
@@ -125,7 +128,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="mono block text-[0.8125rem] text-mute transition-colors duration-300 hover:text-paper"
                 >
-                  {t.contact.labels.map} ↗
+                  {`${t.contact.labels.map} ↗`}
                 </a>
               </li>
             </ul>
@@ -144,7 +147,9 @@ export function Footer() {
         {/* Legal */}
         <div className="mt-16 flex flex-col gap-5 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-between">
           <p className="label">
-            © {year} {t.footer.legal}
+            {/* Un solo nodo de texto: mezclar literales y expresiones parte el
+                texto y la hidratación del prerender se desajusta. */}
+            {`© ${year} ${t.footer.legal}`}
           </p>
 
           <button
