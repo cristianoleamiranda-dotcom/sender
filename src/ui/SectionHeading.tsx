@@ -31,9 +31,8 @@ export function SectionHeading({
   as?: "h2" | "h3";
 }) {
   return (
-    <div className={cn("flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between", className)}>
-      <div className="max-w-[18ch]">
-        <Kicker>{kicker}</Kicker>
+    <div className={cn("flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between", className)}>
+      <div className="max-w-[20ch]">
         <RevealLines
           as={as}
           id={id}
