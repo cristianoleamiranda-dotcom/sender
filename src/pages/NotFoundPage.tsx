@@ -26,7 +26,7 @@ export default function NotFoundPage() {
     });
 
   return (
-    <Section className="relative overflow-hidden bg-ink py-32 sm:py-40 lg:py-48">
+    <Section className="relative overflow-hidden surface-light bg-paper py-32 sm:py-40 lg:py-48">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-10 opacity-30">
         <SignalWave height={200} />
       </div>

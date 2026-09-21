@@ -50,7 +50,7 @@ export default function CategoryPage() {
 
   return (
     <>
-      <Section className="bg-ink pt-32 pb-16 sm:pt-40 lg:pt-44">
+      <Section className="surface-light bg-paper pt-32 pb-16 sm:pt-40 lg:pt-44">
         <nav aria-label="Breadcrumb">
           <ol className="flex flex-wrap items-center gap-3">
             <li>
@@ -105,7 +105,7 @@ export default function CategoryPage() {
         </div>
       </Section>
 
-      <Section className="bg-ink pb-28 sm:pb-36 lg:pb-44">
+      <Section className="surface-light bg-paper pb-28 sm:pb-36 lg:pb-44">
         <div className="flex flex-wrap items-baseline justify-between gap-4 border-t border-line pt-8">
           <h2 className="label-signal">
             {t.catalogPage.products} · {String(items.length).padStart(2, "0")}

@@ -42,7 +42,7 @@ export function Experience() {
   }).scrollYProgress;
 
   return (
-    <Section id="empresa" className="bg-carbon py-28 sm:py-36 lg:py-44" labelledBy="empresa-title">
+    <Section id="empresa" className="surface-light bg-paper py-28 sm:py-36 lg:py-44" labelledBy="empresa-title">
       <SectionHeading
         id="empresa-title"
         kicker={t.experience.kicker}

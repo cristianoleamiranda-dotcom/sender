@@ -49,7 +49,7 @@ export function Transmission() {
   return (
     <Section
       id="transmision"
-      className="relative overflow-hidden bg-carbon py-28 sm:py-36 lg:py-44"
+      className="relative overflow-hidden surface-light bg-paper py-28 sm:py-36 lg:py-44"
       labelledBy="transmision-title"
     >
       {/* Retícula de fondo: da profundidad sin WebGL */}

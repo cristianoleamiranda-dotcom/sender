@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generado": "2026-09-21T01:27:32.040Z",
+    "generado": "2026-09-21T13:56:59.858Z",
     "origen": "src/content/catalog.ts vía tools/gen-routes.mjs",
     "aviso": "Archivo generado. No editar a mano: se regenera con `npm run qa`.",
     "discrepanciaConSitemap": null

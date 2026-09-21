@@ -92,7 +92,7 @@ export function Navbar() {
         className={cn(
           "fixed inset-x-0 top-0 z-40 transition-[background-color,border-color,backdrop-filter] duration-500",
           scrolled
-            ? "border-b border-line bg-ink/88 backdrop-blur-xl"
+            ? "border-b border-black/10 bg-paper/95 backdrop-blur-xl shadow-sm"
             : "border-b border-transparent bg-transparent",
         )}
       >
@@ -108,7 +108,7 @@ export function Navbar() {
               <span className="absolute h-1.5 w-1.5 bg-signal-soft transition-colors group-hover:bg-signal" />
               <span className="absolute h-2 w-2 animate-ping bg-signal/40" />
             </span>
-            <span className="font-mono text-sm font-medium tracking-[0.32em] text-paper transition-colors group-hover:text-signal-soft sm:text-base">
+            <span className={cn("font-mono text-sm font-medium tracking-[0.32em] transition-colors sm:text-base", scrolled ? "text-ink group-hover:text-signal" : "text-paper group-hover:text-signal-soft")}>
               SENDER
             </span>
           </a>
@@ -120,7 +120,7 @@ export function Navbar() {
                 key={item.id}
                 href={item.href}
                 onClick={handle(item.href)}
-                className="label relative px-3.5 py-2 text-mute transition-colors duration-300 hover:text-paper"
+                className={cn("label relative px-3.5 py-2 transition-colors duration-300", scrolled ? "text-ash hover:text-signal" : "text-white/70 hover:text-white")}
               >
                 {item.label}
                 <span
@@ -141,7 +141,7 @@ export function Navbar() {
               {(["es", "en"] as const).map((code, i) => (
                 <span key={code} className="flex items-center gap-1.5">
                   {i === 1 && (
-                    <span aria-hidden="true" className="h-3 w-px bg-line-strong" />
+                    <span aria-hidden="true" className={cn("h-3 w-px", scrolled ? "bg-black/15" : "bg-white/20")} />
                   )}
                   <button
                     type="button"
@@ -150,8 +150,8 @@ export function Navbar() {
                     className={cn(
                       "font-mono text-[0.6875rem] tracking-[0.14em] uppercase transition-colors duration-300",
                       lang === code
-                        ? "text-signal-soft"
-                        : "text-faint hover:text-mute",
+                        ? scrolled ? "text-signal" : "text-signal-soft"
+                        : scrolled ? "text-ash hover:text-ink" : "text-white/60 hover:text-white",
                     )}
                   >
                     {code}
@@ -164,7 +164,7 @@ export function Navbar() {
             <a
               href="/#contacto"
               onClick={handle("/#contacto")}
-              className="group hidden items-center gap-2.5 border border-line-strong px-4 py-2.5 font-mono text-[0.625rem] tracking-[0.2em] text-paper uppercase transition-colors duration-500 hover:border-signal hover:bg-signal hover:text-paper sm:inline-flex"
+              className={cn("group hidden items-center gap-2.5 border px-4 py-2.5 font-mono text-[0.625rem] tracking-[0.2em] uppercase transition-colors duration-500 sm:inline-flex", scrolled ? "border-signal bg-signal text-white hover:bg-signal-deep hover:border-signal-deep" : "border-white/20 text-white hover:border-white hover:bg-white hover:text-ink")}
             >
               {t.nav.cta}
               <span
@@ -186,14 +186,14 @@ export function Navbar() {
               <span
                 aria-hidden="true"
                 className={cn(
-                  "block h-px w-5 bg-paper transition-transform duration-300",
+                  scrolled ? "block h-px w-5 bg-ink transition-transform duration-300" : "block h-px w-5 bg-paper transition-transform duration-300",
                   open && "translate-y-[3px] rotate-45",
                 )}
               />
               <span
                 aria-hidden="true"
                 className={cn(
-                  "block h-px w-5 bg-paper transition-transform duration-300",
+                  scrolled ? "block h-px w-5 bg-ink transition-transform duration-300" : "block h-px w-5 bg-paper transition-transform duration-300",
                   open && "-translate-y-[3px] -rotate-45",
                 )}
               />

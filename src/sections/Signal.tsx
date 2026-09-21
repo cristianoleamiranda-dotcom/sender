@@ -35,7 +35,7 @@ export function Signal() {
     <Section
       id="senal"
       ref={ref as never}
-      className="overflow-hidden bg-ink py-28 sm:py-36 lg:py-44"
+      className="overflow-hidden surface-light bg-paper py-28 sm:py-36 lg:py-44"
       labelledBy="senal-title"
     >
       <SectionHeading
@@ -63,7 +63,7 @@ export function Signal() {
             <button
               type="button"
               onClick={() => go("/productos")}
-              className="group inline-flex items-center justify-center gap-3 border border-line-strong px-7 py-3.5 font-mono text-[0.6875rem] tracking-[0.2em] text-paper uppercase transition-colors duration-500 hover:border-signal hover:text-signal-soft"
+              className="group inline-flex items-center justify-center gap-3 border border-black/15 bg-white px-7 py-3.5 font-mono text-[0.6875rem] tracking-[0.2em] text-ink uppercase transition-colors duration-500 hover:border-signal hover:text-signal-soft"
             >
               {t.solutions.explore}
               <span aria-hidden="true" className="transition-transform duration-500 group-hover:translate-x-1">
@@ -76,7 +76,7 @@ export function Signal() {
               className="label px-2 py-3 text-mute transition-colors duration-300 hover:text-signal-soft"
             >
               {t.transmission.title.join(" ")}
-              <span aria-hidden="true" className="ml-2 text-signal-soft">↓</span>
+              <span aria-hidden="true" className="ml-2 text-signal">↓</span>
             </button>
           </div>
         </div>
@@ -141,8 +141,8 @@ function StageRow({
   */
   // `InputRange` de Motion es mutable: por eso el tipo explícito y no `as const`.
   const range: [number, number] = [position * 0.6, position * 0.6 + 0.35];
-  const nameColor = useTransform(progress, range, ["#9ba3ab", "#ffffff"]);
-  const textColor = useTransform(progress, range, ["#8a949b", "#c7ced3"]);
+  const nameColor = useTransform(progress, range, ["#5e6b7a", "#08090a"]);
+  const textColor = useTransform(progress, range, ["#6b7784", "#2a343d"]);
   const x = useTransform(progress, range, [-8, 0]);
 
   return (
@@ -152,13 +152,13 @@ function StageRow({
       </span>
       <div>
         <motion.span
-          className={cn("mono block text-[0.6875rem] tracking-[0.2em] uppercase", reduced && "text-paper")}
+          className={cn("mono block text-[0.6875rem] tracking-[0.2em] uppercase", reduced && "text-ink")}
           style={reduced ? undefined : { color: nameColor }}
         >
           {name}
         </motion.span>
         <motion.span
-          className={cn("mt-1 block text-[0.8125rem] leading-relaxed", reduced && "text-faint")}
+          className={cn("mt-1 block text-[0.8125rem] leading-relaxed", reduced && "text-ash")}
           style={reduced ? undefined : { color: textColor }}
         >
           {text}
