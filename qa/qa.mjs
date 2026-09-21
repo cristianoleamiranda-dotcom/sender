@@ -9,8 +9,25 @@
  *   - cambio de idioma ES -> EN sin mezclar idiomas
  *   - rutas profundas del catálogo
  */
+import { readFileSync } from "node:fs";
 import { chromium } from "playwright";
 import { contrastEvaluator } from "./contrast.mjs";
+
+/**
+ * Rutas generadas desde `src/content/catalog.ts` por `tools/gen-routes.mjs`.
+ *
+ * Antes esta lista estaba escrita a mano y derivó del router: se probaba
+ * `/contacto` (que es un ancla de la home, no una ruta) y quedaban fuera 14 de
+ * las 16 fichas de producto y la categoría `automatizacion`. Una ruta
+ * inexistente no falla: la atiende el comodín, así que el QA seguía en verde
+ * midiendo la página equivocada sin avisar.
+ */
+const rutasArchivo = JSON.parse(
+  readFileSync(new URL("./routes.generated.json", import.meta.url), "utf8"),
+);
+const rutasGeneradas = rutasArchivo.rutas;
+const rutasValidas = new Set(rutasGeneradas.map((r) => r.path));
+const avisoSitemap = rutasArchivo._meta?.discrepanciaConSitemap ?? null;
 
 const BASE = process.env.BASE_URL ?? "http://127.0.0.1:4173";
 const OUT = new URL("./shots", import.meta.url).pathname;
@@ -299,6 +316,21 @@ const catalogRoutes = [
   },
 ];
 
+/* Las rutas escritas a mano en catalogRoutes deben existir en el catálogo. */
+for (const { path } of catalogRoutes) {
+  if (!rutasValidas.has(path)) {
+    record(
+      path,
+      "arnes",
+      "ruta del arnés que no existe en el catálogo: se estaría midiendo la página 404",
+    );
+  }
+}
+/* Y la lista generada debe coincidir con el sitemap publicado. */
+if (avisoSitemap) {
+  record("sitemap", "arnes", `rutas y sitemap no coinciden: ${JSON.stringify(avisoSitemap)}`);
+}
+
 for (const { path, expect } of catalogRoutes) {
   const { context, page } = await newPage(path, { width: 1440, height: 900 });
   await page.goto(BASE + path, { waitUntil: "networkidle" });
@@ -437,13 +469,8 @@ for (const path of ["/no-existe", "/soluciones/transmisores-fm"]) {
 /* 8 · Contraste WCAG AA en todas las rutas                            */
 /* ------------------------------------------------------------------ */
 {
-  const rutas = [
-    "/",
-    "/productos",
-    ...catalogRoutes.map((r) => r.path),
-    "/contacto",
-    "/no-existe",
-  ];
+  // Todas las rutas del sitio, incluidas las 16 fichas de producto.
+  const rutas = rutasGeneradas.map((r) => r.path);
   for (const path of [...new Set(rutas)]) {
     const { context, page } = await newPage(path, { width: 1440, height: 900 });
     await page.goto(BASE + path, { waitUntil: "load" });

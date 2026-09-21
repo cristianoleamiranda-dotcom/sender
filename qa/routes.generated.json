@@ -1,0 +1,143 @@
+{
+  "_meta": {
+    "generado": "2026-09-21T01:27:32.040Z",
+    "origen": "src/content/catalog.ts vía tools/gen-routes.mjs",
+    "aviso": "Archivo generado. No editar a mano: se regenera con `npm run qa`.",
+    "discrepanciaConSitemap": null
+  },
+  "rutas": [
+    {
+      "path": "/",
+      "tipo": "home"
+    },
+    {
+      "path": "/productos",
+      "tipo": "catalogo"
+    },
+    {
+      "path": "/productos/transmisores-am",
+      "tipo": "categoria",
+      "slug": "transmisores-am"
+    },
+    {
+      "path": "/productos/transmisores-fm",
+      "tipo": "categoria",
+      "slug": "transmisores-fm"
+    },
+    {
+      "path": "/productos/stl-enlaces",
+      "tipo": "categoria",
+      "slug": "stl-enlaces"
+    },
+    {
+      "path": "/productos/procesamiento-de-audio",
+      "tipo": "categoria",
+      "slug": "procesamiento-de-audio"
+    },
+    {
+      "path": "/productos/automatizacion",
+      "tipo": "categoria",
+      "slug": "automatizacion"
+    },
+    {
+      "path": "/productos/rf-y-componentes",
+      "tipo": "categoria",
+      "slug": "rf-y-componentes"
+    },
+    {
+      "path": "/productos/soluciones-especiales",
+      "tipo": "categoria",
+      "slug": "soluciones-especiales"
+    },
+    {
+      "path": "/producto/serie-sender-ss",
+      "tipo": "producto",
+      "slug": "serie-sender-ss"
+    },
+    {
+      "path": "/producto/amplificador-mf-1000w",
+      "tipo": "producto",
+      "slug": "amplificador-mf-1000w"
+    },
+    {
+      "path": "/producto/serie-fm",
+      "tipo": "producto",
+      "slug": "serie-fm"
+    },
+    {
+      "path": "/producto/stl-stal-200",
+      "tipo": "producto",
+      "slug": "stl-stal-200"
+    },
+    {
+      "path": "/producto/stl-al-100",
+      "tipo": "producto",
+      "slug": "stl-al-100"
+    },
+    {
+      "path": "/producto/yagi-134-174",
+      "tipo": "producto",
+      "slug": "yagi-134-174"
+    },
+    {
+      "path": "/producto/bis-ap735",
+      "tipo": "producto",
+      "slug": "bis-ap735"
+    },
+    {
+      "path": "/producto/automatizacion-navtex",
+      "tipo": "producto",
+      "slug": "automatizacion-navtex"
+    },
+    {
+      "path": "/producto/monitoreo-control-remoto",
+      "tipo": "producto",
+      "slug": "monitoreo-control-remoto"
+    },
+    {
+      "path": "/producto/antena-hf-2-30",
+      "tipo": "producto",
+      "slug": "antena-hf-2-30"
+    },
+    {
+      "path": "/producto/antenas-monopolo-am",
+      "tipo": "producto",
+      "slug": "antenas-monopolo-am"
+    },
+    {
+      "path": "/producto/torres-contraventadas",
+      "tipo": "producto",
+      "slug": "torres-contraventadas"
+    },
+    {
+      "path": "/producto/cable-coaxial",
+      "tipo": "producto",
+      "slug": "cable-coaxial"
+    },
+    {
+      "path": "/producto/condensadores-alta-potencia",
+      "tipo": "producto",
+      "slug": "condensadores-alta-potencia"
+    },
+    {
+      "path": "/producto/circuitos-integrados-rf",
+      "tipo": "producto",
+      "slug": "circuitos-integrados-rf"
+    },
+    {
+      "path": "/producto/sistema-navtex-490-518",
+      "tipo": "producto",
+      "slug": "sistema-navtex-490-518"
+    },
+    {
+      "path": "/soluciones/transmisores-fm",
+      "tipo": "compatibilidad",
+      "nota": "redirección histórica a /productos/transmisores-fm"
+    },
+    {
+      "path": "/no-existe",
+      "tipo": "404",
+      "nota": "comprobación negativa: debe mostrar la página no encontrada"
+    }
+  ]
+}

@@ -8,3 +8,6 @@ qa/shots/
 
 # Artefacto incremental de tsc
 *.tsbuildinfo
+
+# Exportación a WordPress: ~16 MB, se regenera con `npm run export:wordpress`
+wordpress-export/

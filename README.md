@@ -25,10 +25,26 @@ npm run preview   # sirve dist/ en http://localhost:4173
 
 ```bash
 npm run qa           # auditoría completa en Chromium real (requiere Playwright)
+npm run qa:pages     # rutas profundas con el base de GitHub Pages (/sender/)
+npm run qa:s24       # viewport real del Samsung Galaxy S24 (360x780, DPR 3)
+npm run qa:all       # qa + qa:pages
 npm run qa:control   # control positivo: verifica que el auditor de contraste detecta fallos
 npm run guard        # control estático: ningún texto animado por opacidad bajo 0.56
 npm run serve        # sirve dist/ con índices de directorio, como un hosting real
 ```
+
+`npm run qa:pages` y `npm run qa:s24` necesitan el build con el base de Pages:
+
+```bash
+VITE_BASE_PATH=/sender/ npm run build
+VITE_BASE_PATH=/sender/ PORT=4321 npm run serve &   # en otra terminal
+BASE=http://127.0.0.1:4321/sender npm run qa:s24
+```
+
+Existen porque el QA original corría solo con base `/`, y ahí no se recorre el
+camino que sí recorre un visitante real de GitHub Pages. Ese hueco dejó pasar un
+bug en producción: todas las rutas profundas mostraban la home. Ver
+`docs/IMPLEMENTACION.md`.
 
 `npm run serve` existe porque `vite preview` resuelve cualquier ruta a
 `dist/index.html`, así que no sirve para comprobar el HTML de una ruta
@@ -39,6 +55,21 @@ La primera vez: `npx playwright install chromium`. Ambos esperan un servidor en
 `http://127.0.0.1:4173`, o el que se indique con `BASE_URL=... npm run qa`.
 
 El script `build` ejecuta `guard` primero: falla rápido y sin navegador.
+
+### Exportar el contenido a WordPress
+
+```bash
+npm run export:wordpress                                   # -> wordpress-export/
+npm run export:wordpress -- --sitio=https://www.sender.cl  # con otro dominio
+```
+
+Genera el catálogo bilingüe en JSON, CSV con el esquema del importador nativo de
+WooCommerce, JSON-LD, sitemap, los WebP del sitio y JPG para la biblioteca de
+medios. Las tres rutas de instalación (subir el sitio ya hecho, importar a
+WooCommerce, o WordPress headless) están explicadas en `wordpress-export/LEEME.md`.
+
+La exportación se compila desde `src/content/` con esbuild: no puede divergir del
+sitio. `wordpress-export/` no se versiona (pesa ~16 MB y se regenera en un segundo).
 
 ---
 
@@ -197,6 +228,22 @@ archivos copiados desde `public/`**. `public/404.html` y el script de precarga
 del `index.html` necesitan conocer el base real, así que usan el marcador
 `__BASE_PATH__` y `scripts/fix-base.mjs` lo sustituye al final del build. Si se
 añade otro HTML a `public/`, puede usar el mismo marcador.
+
+---
+
+## Documentación
+
+| Documento | Contenido |
+| --- | --- |
+| `docs/AUDITORIA-FASE1.md` | Qué había en el repo antes del rediseño y qué se conservó |
+| `docs/IMPLEMENTACION.md` | Decisiones de implementación: el descarte del prerender y el arreglo de las rutas profundas de Pages, con sus causas |
+| `docs/proyecto/LEEME.md` | Índice de la documentación de proceso y contexto |
+| `docs/proyecto/FLUJO-DE-TRABAJO.md` | El flujo Arena AI + GitHub + Samsung S24, etapa por etapa |
+| `docs/proyecto/SEGURIDAD.md` | Manejo de tokens y qué puede guardarse en un repo privado |
+| `docs/proyecto/REPOS-ANALISIS.md` | Análisis de los repositorios `freellmapi` y `scroll-craft` |
+| `docs/proyecto/PROYECTO-SOCIAL.md` | Contexto del proyecto social mayor |
+| `docs/proyecto/CREDITOS.md` | Herramientas, fuentes y atribuciones |
+| `docs/proyecto/INVENTARIO.md` | Estado de todo lo recolectado y pendientes |
 
 ---
 

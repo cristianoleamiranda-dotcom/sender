@@ -218,3 +218,67 @@ Se eliminaron de la raíz diez JPG que eran duplicados byte a byte de
 `src/assets/`, que es de donde lee `scripts/optimize-assets.py`. Los prompts de
 autor y el diagrama se movieron a `docs/`, y los dos generadores de vídeo a
 `scripts/`.
+
+## Las rutas profundas en GitHub Pages
+
+Publicado en `https://cristianoleamiranda-dotcom.github.io/sender/`, cualquier
+ruta distinta de la raíz devolvía la home **con la URL correcta en la barra**.
+El diagnóstico completo sirve de mapa para quien vuelva a tocar esto.
+
+Pages no tiene reescritura SPA: `/sender/productos/x` no existe como archivo,
+así que responde `404.html`. Ese archivo (heredado del proyecto original)
+redirige a la raíz llevando la ruta en `?redirect=`, y el cliente la repone.
+Dos fallos vivían en ese encadenamiento:
+
+1. **El prefijo se perdía.** `404.html` recorta `/sender` para que `redirect`
+   sea una ruta de aplicación (`/productos/x`). Al reponerla había que
+   devolvérselo: el router se crea con `basename` derivado de
+   `import.meta.env.BASE_URL`, y sin prefijo no encajaba ninguna ruta.
+2. **El orden de evaluación.** La reposición estaba en un bloque IIFE al
+   principio del cuerpo de `main.tsx`, pero `createBrowserRouter` lee
+   `window.location` al evaluarse `./router`, y los imports se evalúan *antes*
+   que cualquier sentencia del módulo. El router arrancaba viendo
+   `/sender/?redirect=…`, resolvía a la home, y como `history.replaceState` no
+   dispara `popstate`, nunca se enteraba de la corrección.
+
+Arreglo: `src/restorePagesPath.ts`, importado en primer lugar en `main.tsx`.
+El orden de los imports es lo que sostiene la corrección; el archivo lo dice en
+su cabecera y el README lo repite.
+
+Derivado del mismo flujo: `index.html` precargaba el póster del hero en todas
+las rutas, incluso en las que no se usa (aviso en consola y 37-56 kB de más).
+Ahora el preload comprueba la ruta efectiva, contando la que viene en
+`?redirect=`.
+
+**Por qué no se detectó antes:** todo el QA corría contra un servidor con base
+`/`, donde ese camino no se recorre nunca. Se añadió `npm run qa:pages`
+(`qa/pages-base.mjs`): levanta `dist/` bajo `/sender/`, comprueba que los assets
+resuelven con prefijo, recorre cuatro rutas profundas vía `?redirect=` y
+verifica H1, `<title>` y URL final. Regla práctica: **lo que depende del base
+hay que probarlo con el base puesto.**
+
+## Las rutas del arnés de QA también se generan
+
+El mismo día se encontró un segundo fallo de la misma familia, esta vez en las
+pruebas.
+
+`qa/qa.mjs` llevaba su lista de rutas escrita a mano. Con el tiempo derivó del
+router:
+
+- Probaba `/contacto`, que **no es una ruta**: es un ancla de la home. El
+  navegador la resuelve con el comodín, así que el arnés medía el contraste de la
+  página "señal no encontrada" y lo reportaba como correcto.
+- Dejaba fuera 14 de las 16 fichas de producto y la categoría `automatizacion`.
+
+Lo que hace peligroso este tipo de fallo es que **no se manifiesta**: una ruta
+inexistente no rompe nada, devuelve el 404, y el QA sigue en verde. Es el mismo
+mecanismo que ocultó el bug de las rutas profundas en producción.
+
+Arreglo: `tools/gen-routes.mjs` genera `qa/routes.generated.json` desde
+`src/content/catalog.ts` —la misma fuente que alimenta el sitemap— y compara
+ambas listas. Si rutas y sitemap discrepan, el QA lo reporta como fallo. La
+cobertura pasó de 6 rutas a 27, y cualquier ruta escrita a mano que no exista en
+el catálogo se reporta en vez de pasar en verde.
+
+Regla general que queda de los dos episodios: **las listas de rutas no se
+escriben a mano.** Se derivan de la fuente de contenido, que es única.
