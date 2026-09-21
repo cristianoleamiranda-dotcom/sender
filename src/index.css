@@ -28,9 +28,9 @@
   --color-faint: #8a949b;
 
   /* Señal (marca) */
-  --color-signal: #1e73be;
-  --color-signal-soft: #4f9ad8;
-  --color-signal-deep: #0085b2;
+  --color-signal: #6366f1;
+  --color-signal-soft: #818cf8;
+  --color-signal-deep: #4f46e5;
   --color-line: rgba(255, 255, 255, 0.09);
   --color-line-strong: rgba(255, 255, 255, 0.18);
   /* Línea para superficies claras (blanco/azul protagonista) */

@@ -80,6 +80,8 @@ export function Hero() {
         }
       >
         {/* ---------- Capa 1 · video real ---------- */}
+        {/* OpenDesign: gradiente vibrante sutil */}
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-transparent to-blue-600/20" />
         <motion.video
           ref={videoRef}
           aria-hidden="true"

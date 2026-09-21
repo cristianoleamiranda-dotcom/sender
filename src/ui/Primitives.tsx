@@ -48,7 +48,7 @@ export function Arrow({
 type Variant = "solid" | "ghost" | "text";
 
 const base =
-  "group relative inline-flex items-center justify-center gap-3 font-mono uppercase tracking-[0.18em] " +
+  "group relative inline-flex items-center justify-center gap-3 font-mono uppercase tracking-[0.18em] rounded-full " +
   "transition-[background-color,color,border-color,transform] duration-500 ease-out " +
   "focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-signal-soft " +
   "disabled:pointer-events-none disabled:opacity-40";
@@ -92,7 +92,7 @@ export function ButtonLink({
   hideArrow?: boolean;
 }) {
   return (
-    <a className={cn(base, sizes[size], variants[variant], className)} {...rest}>
+    <a className={cn(base + " rounded-full", sizes[size], variants[variant], className)} {...rest}>
       <CTAInner hideArrow={hideArrow}>{children}</CTAInner>
     </a>
   );
@@ -112,7 +112,7 @@ export function Button({
   hideArrow?: boolean;
 }) {
   return (
-    <button className={cn(base, sizes[size], variants[variant], className)} {...rest}>
+    <button className={cn(base + " rounded-full", sizes[size], variants[variant], className)} {...rest}>
       <CTAInner hideArrow={hideArrow}>{children}</CTAInner>
     </button>
   );
@@ -135,7 +135,7 @@ export function ButtonRoute({
   hideArrow?: boolean;
 }) {
   return (
-    <Link to={to} className={cn(base, sizes[size], variants[variant], className)}>
+    <Link to={to} className={cn(base + " rounded-full", sizes[size], variants[variant], className)}>
       <CTAInner hideArrow={hideArrow}>{children}</CTAInner>
     </Link>
   );
