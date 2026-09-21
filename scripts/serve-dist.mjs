@@ -23,6 +23,19 @@ const dist = join(root, "dist");
 const PORT = Number(process.env.PORT ?? 4173);
 const HOST = process.env.HOST ?? "0.0.0.0";
 
+/**
+ * Prefijo con el que se compilo `dist/`.
+ *
+ * En GitHub Pages el sitio vive bajo `/sender/`, asi que las URL que llegan
+ * traen ese prefijo y hay que recortarlo antes de buscar el archivo en disco.
+ * Sin esto `/sender/assets/x.js` no existe, el fallback SPA responde con HTML y
+ * el navegador se queda sin modulos.
+ */
+const BASE = (() => {
+  const raw = process.env.VITE_BASE_PATH ?? "/";
+  return raw.endsWith("/") ? raw : `${raw}/`;
+})();
+
 const MIME = {
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript",
@@ -47,7 +60,12 @@ if (!existsSync(dist)) {
 
 createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host ?? "localhost"}`);
-  const path = decodeURIComponent(url.pathname);
+  let path = decodeURIComponent(url.pathname);
+  if (BASE !== "/") {
+    const prefijo = BASE.slice(0, -1); // "/sender/" -> "/sender"
+    if (path === prefijo) path = "/";
+    else if (path.startsWith(prefijo + "/")) path = path.slice(prefijo.length);
+  }
 
   const candidatos = path.endsWith("/")
     ? [join(dist, path, "index.html")]
@@ -81,5 +99,6 @@ createServer(async (req, res) => {
   res.writeHead(200, { "content-type": MIME[".html"] });
   res.end(body);
 }).listen(PORT, HOST, () => {
-  console.log(`dist/ en http://127.0.0.1:${PORT} (índices de directorio + fallback SPA)`);
+  const raiz = BASE === "/" ? "" : BASE.slice(0, -1);
+  console.log(`dist/ en http://127.0.0.1:${PORT}${raiz} (base ${BASE}, índices de directorio + fallback SPA)`);
 });

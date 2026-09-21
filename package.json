@@ -15,7 +15,9 @@
     "qa": "node qa/qa.mjs",
     "qa:control": "node qa/probe-test.mjs",
     "guard": "node qa/no-opacity-text.mjs",
-    "serve": "node scripts/serve-dist.mjs"
+    "serve": "node scripts/serve-dist.mjs",
+    "qa:pages": "node qa/pages-base.mjs",
+    "qa:all": "npm run qa && npm run qa:pages"
   },
   "dependencies": {
     "clsx": "2.1.1",

@@ -218,3 +218,41 @@ Se eliminaron de la raíz diez JPG que eran duplicados byte a byte de
 `src/assets/`, que es de donde lee `scripts/optimize-assets.py`. Los prompts de
 autor y el diagrama se movieron a `docs/`, y los dos generadores de vídeo a
 `scripts/`.
+
+## Las rutas profundas en GitHub Pages
+
+Publicado en `https://cristianoleamiranda-dotcom.github.io/sender/`, cualquier
+ruta distinta de la raíz devolvía la home **con la URL correcta en la barra**.
+El diagnóstico completo sirve de mapa para quien vuelva a tocar esto.
+
+Pages no tiene reescritura SPA: `/sender/productos/x` no existe como archivo,
+así que responde `404.html`. Ese archivo (heredado del proyecto original)
+redirige a la raíz llevando la ruta en `?redirect=`, y el cliente la repone.
+Dos fallos vivían en ese encadenamiento:
+
+1. **El prefijo se perdía.** `404.html` recorta `/sender` para que `redirect`
+   sea una ruta de aplicación (`/productos/x`). Al reponerla había que
+   devolvérselo: el router se crea con `basename` derivado de
+   `import.meta.env.BASE_URL`, y sin prefijo no encajaba ninguna ruta.
+2. **El orden de evaluación.** La reposición estaba en un bloque IIFE al
+   principio del cuerpo de `main.tsx`, pero `createBrowserRouter` lee
+   `window.location` al evaluarse `./router`, y los imports se evalúan *antes*
+   que cualquier sentencia del módulo. El router arrancaba viendo
+   `/sender/?redirect=…`, resolvía a la home, y como `history.replaceState` no
+   dispara `popstate`, nunca se enteraba de la corrección.
+
+Arreglo: `src/restorePagesPath.ts`, importado en primer lugar en `main.tsx`.
+El orden de los imports es lo que sostiene la corrección; el archivo lo dice en
+su cabecera y el README lo repite.
+
+Derivado del mismo flujo: `index.html` precargaba el póster del hero en todas
+las rutas, incluso en las que no se usa (aviso en consola y 37-56 kB de más).
+Ahora el preload comprueba la ruta efectiva, contando la que viene en
+`?redirect=`.
+
+**Por qué no se detectó antes:** todo el QA corría contra un servidor con base
+`/`, donde ese camino no se recorre nunca. Se añadió `npm run qa:pages`
+(`qa/pages-base.mjs`): levanta `dist/` bajo `/sender/`, comprueba que los assets
+resuelven con prefijo, recorre cuatro rutas profundas vía `?redirect=` y
+verifica H1, `<title>` y URL final. Regla práctica: **lo que depende del base
+hay que probarlo con el base puesto.**

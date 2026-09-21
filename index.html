@@ -83,6 +83,24 @@
       (function () {
         var base = "__BASE_PATH__";
         if (base.charAt(base.length - 1) !== "/") base += "/";
+
+        /*
+          Solo se precarga en la home, que es donde el póster es el LCP.
+
+          En una ruta profunda de GitHub Pages este archivo se sirve tras el
+          rebote de 404.html, con la ruta real en ?redirect=; precargar ahí el
+          póster del hero era descargar 37-56 kB que no se usan y dejaba un
+          aviso en consola ("preloaded but not used").
+        */
+        var params = new URLSearchParams(window.location.search);
+        var redirect = params.get("redirect");
+        var ruta = redirect && redirect.charAt(0) === "/" ? redirect : window.location.pathname;
+        if (ruta.slice(0, base.length - 1) === base.slice(0, -1)) {
+          ruta = ruta.slice(base.length - 1) || "/";
+        }
+        var esHome = ruta === "/" || ruta === "/index.html";
+        if (!esHome) return;
+
         var w = window.innerWidth < 700 ? 640 : window.innerWidth < 1200 ? 960 : 1280;
         var link = document.createElement("link");
         link.rel = "preload";
