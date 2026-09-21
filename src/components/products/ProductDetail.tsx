@@ -28,7 +28,7 @@ export function ProductDetail({ product }: { product: Product }) {
   const related = relatedProducts(product, 3);
 
   return (
-    <article className="bg-ink">
+    <article className="surface-light bg-paper">
       {/* ---------- Cabecera ---------- */}
       <header className="border-b border-line px-5 py-8 sm:px-8 lg:px-12 lg:py-10 xl:px-16">
         <div className="mx-auto w-full max-w-[1600px]">

@@ -58,7 +58,7 @@ export function Engineering() {
   return (
     <Section
       id="ingenieria"
-      className="relative overflow-hidden bg-ink py-28 sm:py-36 lg:py-44"
+      className="relative overflow-hidden surface-light bg-paper py-28 sm:py-36 lg:py-44"
       labelledBy="ingenieria-title"
     >
       <SectionHeading

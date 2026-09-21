@@ -33,6 +33,9 @@
   --color-signal-deep: #0085b2;
   --color-line: rgba(255, 255, 255, 0.09);
   --color-line-strong: rgba(255, 255, 255, 0.18);
+  /* Línea para superficies claras (blanco/azul protagonista) */
+  --color-line-dark: rgba(8, 9, 10, 0.08);
+  --color-line-dark-strong: rgba(8, 9, 10, 0.16);
 
   /* Tipografía -------------------------------------------------------
      CONTRASTE BUSCADO: DISPLAY enorme y compacta contra MONO técnica
@@ -227,6 +230,117 @@
   .noise {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
   }
+}
+
+/* ----------------------------------------------------------------
+   SUPERFICIE CLARA — blanco/azul protagonistas
+   Hero y footer permanecen oscuros (dark technology); el resto
+   respira en blanco luminoso con azul como señal primaria.
+   Uso: <Section className="surface-light ...">
+   ---------------------------------------------------------------- */
+.surface-light {
+  background-color: var(--color-paper) !important;
+  color: var(--color-ash);
+  --color-line: var(--color-line-dark);
+  --color-line-strong: var(--color-line-dark-strong);
+}
+.surface-light h1,
+.surface-light h2,
+.surface-light h3,
+.surface-light h4,
+.surface-light .display {
+  color: var(--color-ink);
+}
+.surface-light .display-light {
+  color: var(--color-ink);
+}
+.surface-light .label {
+  color: #5e6b7a;
+}
+.surface-light .label-signal {
+  color: var(--color-signal);
+}
+.surface-light .text-signal-soft {
+  color: var(--color-signal) !important;
+}
+.surface-light .bg-ink .text-signal-soft,
+.surface-light .bg-signal .text-signal-soft {
+  color: var(--color-signal-soft) !important;
+}
+.surface-light .body-tech {
+  color: var(--color-ash);
+}
+.surface-light .lead {
+  color: #1e2933;
+}
+.surface-light .mono {
+  color: #5a6570;
+}
+/* Bloques técnicos que eran grafito oscuro pasan a gris muy claro.
+   Nota: .bg-ink NO se convierte — el overlay de imagen debe seguir oscuro. */
+.surface-light .bg-carbon,
+.surface-light .bg-graphite,
+.surface-light .bg-graphite-2 {
+  background-color: #f6f7f8 !important;
+  border-color: rgba(8, 9, 10, 0.08) !important;
+}
+.surface-light .text-paper {
+  color: var(--color-ink) !important;
+}
+.surface-light .text-mute {
+  color: var(--color-ash) !important;
+}
+.surface-light .text-faint {
+  color: #5e6b7a !important;
+}
+/* Excepciones: sobre fondos oscuros (imagen + bg-ink, o azul) el texto vuelve a blanco */
+.surface-light .bg-ink .text-paper,
+.surface-light .bg-ink .text-mute,
+.surface-light .bg-ink .display,
+.surface-light .bg-ink.display,
+.surface-light .bg-signal .text-paper,
+.surface-light .bg-signal .text-mute,
+.surface-light .bg-signal.display {
+  color: #ffffff !important;
+}
+.surface-light .bg-ink .label,
+.surface-light .bg-ink .mono,
+.surface-light .bg-ink .text-faint {
+  color: #8a949b !important;
+}
+.surface-light .bg-ink .label-signal {
+  color: #4f9ad8 !important;
+}
+.surface-light .bg-ink .label,
+.surface-light .bg-ink .mono {
+  color: #8a949b !important;
+}
+.surface-light .bg-ink .label-signal {
+  color: #4f9ad8 !important;
+}
+.surface-light .bg-signal {
+  color: #ffffff;
+}
+.surface-light .bg-signal .label,
+.surface-light .bg-signal .mono,
+.surface-light .bg-signal .display,
+.surface-light .bg-signal p,
+.surface-light .bg-signal span {
+  color: #ffffff !important;
+}
+.surface-light .bg-signal .label-signal {
+  color: #ffffff !important;
+}
+.surface-light .border-line {
+  border-color: var(--color-line-dark) !important;
+}
+.surface-light .border-line-strong {
+  border-color: var(--color-line-dark-strong) !important;
+}
+.surface-light .grid-tech {
+  background-image:
+    linear-gradient(to right, rgba(8, 9, 10, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(8, 9, 10, 0.035) 1px, transparent 1px);
 }
 
 /* ----------------------------------------------------------------

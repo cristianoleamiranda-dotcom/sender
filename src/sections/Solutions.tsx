@@ -63,7 +63,7 @@ export function Solutions() {
   };
 
   return (
-    <Section id="soluciones" className="bg-ink py-28 sm:py-36 lg:py-44" labelledBy="soluciones-title">
+    <Section id="soluciones" className="surface-light bg-paper py-28 sm:py-36 lg:py-44" labelledBy="soluciones-title">
       <SectionHeading
         id="soluciones-title"
         kicker={t.solutions.kicker}
@@ -113,14 +113,14 @@ export function Solutions() {
                   aria-expanded={isExpanded}
                   className={cn(
                     "group relative grid w-full grid-cols-[auto_1fr_auto] items-center gap-x-5 gap-y-4 px-1 py-7 text-left transition-colors duration-500 sm:gap-x-8 sm:py-9 lg:grid-cols-[5rem_minmax(0,1fr)_minmax(0,26rem)_auto]",
-                    isActive ? "bg-graphite/60" : "bg-transparent",
+                    isActive ? "bg-signal" : "bg-transparent",
                   )}
                 >
                   {/* Índice */}
                   <span
                     className={cn(
                       "mono text-[0.6875rem] transition-colors duration-500",
-                      isActive ? "text-signal-soft" : "text-faint",
+                      isActive ? "text-white" : "text-faint",
                     )}
                   >
                     {category.index[lang]}
@@ -131,7 +131,7 @@ export function Solutions() {
                     <span
                       className={cn(
                         "display block text-[clamp(1.5rem,4.4vw,3rem)] transition-[transform,color] duration-700 ease-out",
-                        isActive && !reduced ? "translate-x-2 text-paper" : "text-paper/85",
+                        isActive && !reduced ? "translate-x-2 !text-white" : "text-ink/85",
                       )}
                     >
                       {category.name[lang]}
@@ -158,8 +158,8 @@ export function Solutions() {
                       className={cn(
                         "flex h-9 w-9 items-center justify-center border transition-colors duration-500",
                         isActive
-                          ? "border-signal bg-signal text-paper"
-                          : "border-line-strong text-mute",
+                          ? "border-signal bg-white text-signal"
+                          : "border-black/15 text-ash",
                       )}
                     >
                       →

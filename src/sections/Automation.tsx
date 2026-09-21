@@ -107,7 +107,7 @@ export function Automation() {
   return (
     <Section
       id="automatizacion"
-      className="relative overflow-hidden bg-ink py-28 sm:py-36 lg:py-44"
+      className="relative overflow-hidden surface-light bg-paper py-28 sm:py-36 lg:py-44"
       labelledBy="automatizacion-title"
     >
       <SectionHeading

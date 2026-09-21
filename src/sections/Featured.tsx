@@ -42,7 +42,7 @@ export function Featured() {
   return (
     <Section
       id="productos"
-      className="bg-carbon py-28 sm:py-36 lg:py-44"
+      className="surface-light bg-paper py-28 sm:py-36 lg:py-44"
       labelledBy="productos-title"
     >
       <SectionHeading

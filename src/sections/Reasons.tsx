@@ -32,7 +32,7 @@ export function Reasons() {
     <Section
       id="por-que-sender"
       ref={ref as never}
-      className="overflow-hidden bg-carbon py-28 sm:py-36 lg:py-44"
+      className="overflow-hidden surface-light bg-paper py-28 sm:py-36 lg:py-44"
       labelledBy="razones-title"
     >
       <Kicker>{t.reasons.kicker}</Kicker>
@@ -92,15 +92,15 @@ function ReasonRow({
       style={reduced ? undefined : { y }}
     >
       <div className="grid items-baseline gap-x-8 gap-y-4 lg:grid-cols-[5rem_minmax(0,1fr)_minmax(0,26rem)]">
-        <span className="mono text-[0.625rem] text-faint transition-colors duration-500 group-hover:text-paper">
+        <span className="mono text-[0.625rem] text-faint transition-colors duration-500 group-hover:text-signal">
           {index}
         </span>
 
         <motion.h3
           className="display text-[clamp(2rem,8vw,6rem)] transition-colors duration-500 group-hover:text-signal-soft"
           style={reduced ? undefined : { letterSpacing: tracking }}
-          initial={reduced ? false : { color: "#6f787e" }}
-          whileInView={reduced ? undefined : { color: "#e4e8eb" }}
+          initial={reduced ? false : { color: "#8a949b" }}
+          whileInView={reduced ? undefined : { color: "#08090a" }}
           viewport={{ once: true, amount: 0.6 }}
           transition={{ duration: 1.1, delay, ease: [0.16, 1, 0.3, 1] }}
         >
@@ -108,7 +108,7 @@ function ReasonRow({
         </motion.h3>
 
         <motion.p
-          className="text-[0.875rem] leading-relaxed text-mute lg:pb-3"
+          className="text-[0.875rem] leading-relaxed text-ash lg:pb-3"
           initial={reduced ? false : { y: 16 }}
           whileInView={reduced ? undefined : { y: 0 }}
           viewport={{ once: true, amount: 0.6 }}

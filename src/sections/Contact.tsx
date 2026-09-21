@@ -83,7 +83,7 @@ export function Contact() {
     <Section
       id="contacto"
       bleed
-      className="relative overflow-hidden bg-carbon"
+      className="relative overflow-hidden surface-light bg-paper"
       labelledBy="contacto-title"
     >
       {/* Señal de fondo */}
@@ -108,7 +108,7 @@ export function Contact() {
         <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
           <a
             href={`mailto:${company.email}`}
-            className="group inline-flex items-center justify-center gap-3 bg-paper px-8 py-4 font-mono text-[0.6875rem] tracking-[0.2em] text-ink uppercase transition-colors duration-500 hover:bg-signal hover:text-paper"
+            className="group inline-flex items-center justify-center gap-3 bg-signal border border-signal px-8 py-4 font-mono text-[0.6875rem] tracking-[0.2em] text-white uppercase transition-colors duration-500 hover:bg-signal-deep hover:border-signal-deep"
           >
             {t.contact.primary}
             <span aria-hidden="true" className="transition-transform duration-500 group-hover:translate-x-1">
@@ -120,7 +120,7 @@ export function Contact() {
             href={whatsappHref(lang)}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center justify-center gap-3 border border-line-strong px-8 py-4 font-mono text-[0.6875rem] tracking-[0.2em] text-paper uppercase transition-colors duration-500 hover:border-signal hover:text-signal-soft"
+            className="group inline-flex items-center justify-center gap-3 border border-black/15 bg-white px-8 py-4 font-mono text-[0.6875rem] tracking-[0.2em] text-ink uppercase transition-colors duration-500 hover:border-signal hover:text-signal"
           >
             {t.contact.whatsapp}
             <span aria-hidden="true" className="h-1.5 w-1.5 bg-signal" />
@@ -129,7 +129,7 @@ export function Contact() {
           <button
             type="button"
             onClick={() => navigate("/productos")}
-            className="inline-flex items-center justify-center px-4 py-4 font-mono text-[0.6875rem] tracking-[0.2em] text-mute uppercase transition-colors duration-300 hover:text-paper"
+            className="inline-flex items-center justify-center px-4 py-4 font-mono text-[0.6875rem] tracking-[0.2em] text-ash uppercase transition-colors duration-300 hover:text-signal"
           >
             {t.contact.products}
           </button>
@@ -143,7 +143,7 @@ export function Contact() {
 
             <dl className="mt-8 space-y-px">
               <ContactRow label={t.contact.labels.address}>
-                <address className="text-[0.9375rem] leading-relaxed text-paper not-italic">
+                <address className="text-[0.9375rem] leading-relaxed text-ink not-italic">
                   {company.address.street}
                   <br />
                   {company.address.commune}, {company.address.city}
@@ -163,7 +163,7 @@ export function Contact() {
               <ContactRow label={t.contact.labels.phone}>
                 <a
                   href={company.phoneHref}
-                  className="mono text-[1.0625rem] text-paper transition-colors duration-300 hover:text-signal-soft"
+                  className="mono text-[1.0625rem] text-ink transition-colors duration-300 hover:text-signal-soft"
                 >
                   {company.phone}
                 </a>
@@ -172,7 +172,7 @@ export function Contact() {
               <ContactRow label={t.contact.labels.email}>
                 <a
                   href={`mailto:${company.email}`}
-                  className="mono text-[0.9375rem] text-paper transition-colors duration-300 hover:text-signal-soft"
+                  className="mono text-[0.9375rem] text-ink transition-colors duration-300 hover:text-signal-soft"
                 >
                   {company.email}
                 </a>
@@ -194,7 +194,7 @@ export function Contact() {
             <form
               ref={formRef}
               onSubmit={onSubmit}
-              className="border border-line bg-ink/60 p-6 sm:p-9"
+              className="border border-black/10 bg-white p-6 sm:p-9 shadow-sm"
               aria-labelledby={`${formId}-title`}
             >
               <h3 id={`${formId}-title`} className="label-signal">
@@ -275,7 +275,7 @@ export function Contact() {
                 <button
                   type="submit"
                   disabled={state === "preparing"}
-                  className="group inline-flex items-center justify-center gap-3 bg-paper px-7 py-4 font-mono text-[0.6875rem] tracking-[0.2em] text-ink uppercase transition-colors duration-500 hover:bg-signal hover:text-paper disabled:opacity-50"
+                  className="group inline-flex items-center justify-center gap-3 bg-signal border border-signal px-7 py-4 font-mono text-[0.6875rem] tracking-[0.2em] text-white uppercase transition-colors duration-500 hover:bg-signal-deep disabled:opacity-50"
                 >
                   {state === "preparing" ? t.contact.form.preparing : t.contact.form.submit}
                   <span aria-hidden="true" className="transition-transform duration-500 group-hover:translate-x-1">
@@ -287,7 +287,7 @@ export function Contact() {
                   href={whatsappHref(lang, selectedType)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="label inline-flex items-center justify-center gap-2 px-2 py-4 text-mute transition-colors duration-300 hover:text-signal-soft"
+                  className="label inline-flex items-center justify-center gap-2 px-2 py-4 text-ash transition-colors duration-300 hover:text-signal-soft"
                 >
                   {t.contact.whatsapp}
                   <span aria-hidden="true" className="h-1.5 w-1.5 bg-signal" />
@@ -306,8 +306,8 @@ export function Contact() {
 }
 
 const inputClass =
-  "w-full border border-line bg-carbon px-4 py-3 text-[0.875rem] text-paper transition-colors duration-300 " +
-  "placeholder:text-faint hover:border-line-strong focus:border-signal focus:outline-none";
+  "w-full border border-black/15 bg-white px-4 py-3 text-[0.875rem] text-ink transition-colors duration-300 " +
+  "placeholder:text-ash/60 hover:border-black/25 focus:border-signal focus:outline-none";
 
 function ContactRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -333,7 +333,7 @@ function Field({
     <div>
       <label htmlFor={id} className="label mb-2.5 block">
         {label}
-        {required && <span className="ml-1 text-signal-soft">*</span>}
+        {required && <span className="ml-1 text-signal">*</span>}
       </label>
       {children}
     </div>

@@ -66,7 +66,7 @@ export function ProductExplorer({
           <p className="lead">{activeCategory.description[lang]}</p>
           <Link
             to={`/productos/${activeCategory.slug}`}
-            className="label mt-5 inline-flex items-center gap-2 text-signal-soft transition-colors duration-300 hover:text-paper"
+            className="label mt-5 inline-flex items-center gap-2 text-signal transition-colors duration-300 hover:text-paper"
           >
             {t.catalogPage.viewCategory}
             <span aria-hidden="true">→</span>
@@ -122,7 +122,7 @@ function FilterChip({
         "group inline-flex items-center gap-2.5 border px-4 py-2.5 font-mono text-[0.625rem] tracking-[0.16em] uppercase transition-colors duration-400",
         active
           ? "border-signal bg-signal text-paper"
-          : "border-line text-mute hover:border-line-strong hover:text-paper",
+          : "border-black/15 text-ash hover:border-signal/30 hover:text-ink",
       )}
     >
       {index && (

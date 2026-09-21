@@ -60,7 +60,7 @@ const sizes = {
 } as const;
 
 const variants: Record<Variant, string> = {
-  solid: "bg-paper text-ink hover:bg-signal hover:text-paper",
+  solid: "bg-signal text-white border border-signal hover:bg-signal-deep hover:border-signal-deep hover:text-white",
   ghost: "border border-line-strong text-paper hover:border-signal hover:text-signal-soft",
   text: "text-mute hover:text-signal-soft py-2",
 };

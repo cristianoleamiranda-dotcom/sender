@@ -42,7 +42,7 @@ export default function CatalogPage() {
 
   return (
     <>
-      <Section className="bg-ink pt-32 pb-16 sm:pt-40 sm:pb-20 lg:pt-44">
+      <Section className="surface-light bg-paper pt-32 pb-16 sm:pt-40 sm:pb-20 lg:pt-44">
         <nav aria-label="Breadcrumb">
           <ol className="flex flex-wrap items-center gap-3">
             <li>
@@ -71,7 +71,7 @@ export default function CatalogPage() {
             <li key={category.id} className="border-b border-line">
               <Link
                 to={`/productos/${category.slug}`}
-                className="group flex h-full flex-col gap-3 bg-ink p-5 transition-colors duration-500 hover:bg-graphite"
+                className="group flex h-full flex-col gap-3 surface-light bg-paper p-5 transition-colors duration-500 hover:bg-graphite"
               >
                 <span className="mono text-[0.625rem] text-signal-soft">{category.index[lang]}</span>
                 <span className="display text-[clamp(1.05rem,2.2vw,1.5rem)] transition-colors duration-500 group-hover:text-signal-soft">
@@ -88,7 +88,7 @@ export default function CatalogPage() {
         </p>
       </Section>
 
-      <Section className="bg-ink pb-28 sm:pb-36 lg:pb-44">
+      <Section className="surface-light bg-paper pb-28 sm:pb-36 lg:pb-44">
         <ProductExplorer />
       </Section>
     </>

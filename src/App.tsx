@@ -19,7 +19,7 @@ export function Shell() {
   useScrollRestore();
 
   return (
-    <div className="relative min-h-screen bg-ink text-mute antialiased">
+    <div className="relative min-h-screen bg-paper text-ash antialiased">
       <SkipLink />
       <RouteProgress />
       <Navbar />
@@ -48,7 +48,7 @@ export function Shell() {
 function RouteFallback() {
   return (
     <div
-      className="flex min-h-screen items-center justify-center bg-ink"
+      className="flex min-h-screen items-center justify-center bg-paper"
       aria-busy="true"
       role="status"
     >

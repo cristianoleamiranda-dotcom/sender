@@ -32,7 +32,7 @@ export function Projects() {
   return (
     <Section
       id="proyectos"
-      className="bg-ink py-28 sm:py-36 lg:py-44"
+      className="surface-light bg-paper py-28 sm:py-36 lg:py-44"
       labelledBy="proyectos-title"
     >
       <SectionHeading
@@ -69,10 +69,10 @@ export function Projects() {
             />
             <span aria-hidden="true" className="absolute top-0 left-0 h-px w-full bg-signal" />
 
-            <div className="absolute right-0 bottom-0 left-0 flex flex-wrap items-end justify-between gap-4 bg-gradient-to-t from-ink via-ink/70 to-transparent p-5 sm:p-7">
+            <div className="absolute right-0 bottom-0 left-0 flex flex-wrap items-end justify-between gap-4 bg-ink p-5 sm:p-7">
               <div>
                 <span className="label-signal">{current.category[lang]}</span>
-                <p className="display mt-2 max-w-[22ch] text-[clamp(1.2rem,3vw,2.1rem)]">
+                <p className="display bg-ink !text-white mt-2 max-w-[22ch] text-[clamp(1.2rem,3vw,2.1rem)] px-2 py-1">
                   {current.name[lang]}
                 </p>
               </div>
@@ -81,7 +81,7 @@ export function Projects() {
                   href={current.source.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2.5 border border-line-strong px-4 py-2.5 font-mono text-[0.625rem] tracking-[0.18em] text-paper/90 uppercase transition-colors duration-500 hover:border-signal hover:text-signal-soft"
+                  className="group inline-flex items-center gap-2.5 border border-white/20 bg-transparent px-4 py-2.5 font-mono text-[0.625rem] tracking-[0.18em] !text-white uppercase transition-colors duration-500 hover:border-signal hover:text-signal-soft"
                 >
                   {t.projects.view}: {current.source.label[lang]}
                   <span aria-hidden="true" className="transition-transform duration-500 group-hover:translate-x-0.5">
@@ -122,13 +122,13 @@ export function Projects() {
                     aria-current={isActive}
                     className={cn(
                       "group relative flex w-full items-start gap-5 px-1 py-6 text-left transition-colors duration-500",
-                      isActive ? "bg-graphite/60" : "hover:bg-graphite/30",
+                      isActive ? "bg-signal" : "hover:bg-black/[0.04]",
                     )}
                   >
                     <span
                       className={cn(
                         "mono mt-1 text-[0.625rem] transition-colors duration-500",
-                        isActive ? "text-signal-soft" : "text-faint",
+                        isActive ? "text-white" : "text-faint",
                       )}
                     >
                       {project.index[lang]}
@@ -138,7 +138,7 @@ export function Projects() {
                       <span
                         className={cn(
                           "block text-[0.9375rem] leading-snug font-medium transition-colors duration-500",
-                          isActive ? "text-paper" : "text-mute group-hover:text-paper",
+                          isActive ? "text-ink" : "text-ash group-hover:text-ink",
                         )}
                       >
                         {project.name[lang]}
@@ -178,7 +178,7 @@ function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div className="border-t border-line py-5 sm:pr-6">
       <dt className="label">{label}</dt>
-      <dd className="mono mt-2 text-[0.8125rem] leading-relaxed text-paper">{value}</dd>
+      <dd className="mono mt-2 text-[0.8125rem] leading-relaxed text-ink">{value}</dd>
     </div>
   );
 }
