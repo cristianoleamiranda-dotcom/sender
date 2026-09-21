@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Kicker, Section } from "./Primitives";
+import { Section } from "./Primitives";
 import { RevealLines } from "./Reveal";
 import { cn } from "@/utils/cn";
 
@@ -13,7 +13,7 @@ import { cn } from "@/utils/cn";
  */
 export function SectionHeading({
   id,
-  kicker,
+  kicker: _kicker,
   lines,
   intro,
   aside,
@@ -31,9 +31,8 @@ export function SectionHeading({
   as?: "h2" | "h3";
 }) {
   return (
-    <div className={cn("flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between", className)}>
-      <div className="max-w-[18ch]">
-        <Kicker>{kicker}</Kicker>
+    <div className={cn("flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between", className)}>
+      <div className="max-w-[20ch]">
         <RevealLines
           as={as}
           id={id}
