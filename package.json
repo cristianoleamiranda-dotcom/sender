@@ -17,7 +17,9 @@
     "guard": "node qa/no-opacity-text.mjs",
     "serve": "node scripts/serve-dist.mjs",
     "qa:pages": "node qa/pages-base.mjs",
-    "qa:all": "npm run qa && npm run qa:pages"
+    "qa:all": "npm run qa && npm run qa:pages",
+    "export:wordpress": "node tools/export-wordpress.mjs",
+    "qa:s24": "node qa/dispositivo-s24.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",
