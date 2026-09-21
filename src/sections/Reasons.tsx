@@ -83,7 +83,7 @@ function ReasonRow({
   const tracking = useTransform(
     depth,
     [0.1 + delay, 0.45 + delay],
-    ["0.06em", "-0.045em"],
+    ["0.02em", "-0.035em"],
   );
 
   return (
@@ -120,7 +120,7 @@ function ReasonRow({
 
       <span
         aria-hidden="true"
-        className="absolute bottom-0 left-0 h-px w-0 bg-signal transition-[width] duration-[900ms] ease-out group-hover:w-full"
+        className="absolute bottom-0 left-0 h-px w-full scale-x-0 origin-left bg-signal transition-transform duration-[900ms] ease-out group-hover:scale-x-100"
       />
     </motion.li>
   );

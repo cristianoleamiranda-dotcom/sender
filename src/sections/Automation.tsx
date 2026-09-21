@@ -176,8 +176,8 @@ export function Automation() {
 
                   <div className="relative mt-3 h-1.5 w-full overflow-hidden bg-graphite">
                     <span
-                      className="absolute inset-y-0 left-0 block bg-signal transition-[width] duration-200 ease-out"
-                      style={{ width: `${Math.min(100, Math.max(0, pct))}%` }}
+                      className="absolute inset-y-0 left-0 block w-full origin-left bg-signal transition-transform duration-200 ease-out"
+                      style={{ transform: `scaleX(${Math.min(100, Math.max(0, pct)) / 100})` }}
                     />
                     {/* Marcas de escala */}
                     <span aria-hidden="true" className="absolute inset-0 flex justify-between">

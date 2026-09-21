@@ -102,7 +102,7 @@ export function Experience() {
             >
               <span
                 aria-hidden="true"
-                className="absolute -top-px left-0 h-px w-0 bg-signal transition-[width] duration-700 ease-out group-hover:w-full"
+                className="absolute -top-px left-0 h-px w-full scale-x-0 origin-left bg-signal transition-transform duration-700 ease-out group-hover:scale-x-100"
               />
               <span className="mono block text-[0.625rem] text-signal-soft">{era.index}</span>
               <span className="display mt-3 block text-[clamp(1.35rem,3vw,2rem)]">
@@ -230,7 +230,7 @@ function DomainModule({
       {/* Línea técnica que aparece al pasar el cursor */}
       <span
         aria-hidden="true"
-        className="absolute bottom-0 left-0 h-px w-0 bg-signal-soft transition-[width] duration-700 ease-out group-hover:w-full sm:left-6"
+        className="absolute bottom-0 left-0 h-px w-full scale-x-0 origin-left bg-signal-soft transition-transform duration-700 ease-out group-hover:scale-x-100 sm:left-6"
       />
     </motion.li>
   );

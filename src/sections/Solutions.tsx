@@ -170,8 +170,8 @@ export function Solutions() {
                   <span
                     aria-hidden="true"
                     className={cn(
-                      "absolute bottom-0 left-0 h-px bg-signal transition-[width] duration-700 ease-out",
-                      isActive ? "w-full" : "w-0",
+                      "absolute bottom-0 left-0 h-px bg-signal transition-transform duration-700 ease-out",
+                      isActive ? "w-full scale-x-100 origin-left" : "w-full scale-x-0 origin-left",
                     )}
                   />
                 </button>
