@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Kicker, Section } from "./Primitives";
+import { Section } from "./Primitives";
 import { RevealLines } from "./Reveal";
 import { cn } from "@/utils/cn";
 
@@ -13,7 +13,7 @@ import { cn } from "@/utils/cn";
  */
 export function SectionHeading({
   id,
-  kicker,
+  kicker: _kicker,
   lines,
   intro,
   aside,
