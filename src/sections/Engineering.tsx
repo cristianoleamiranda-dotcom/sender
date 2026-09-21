@@ -157,8 +157,8 @@ export function Engineering() {
                 <span
                   aria-hidden="true"
                   className={cn(
-                    "absolute bottom-0 left-0 h-px bg-signal transition-[width] duration-700 ease-out sm:left-6",
-                    isHovered ? "w-[calc(100%-3rem)]" : "w-0",
+                    "absolute bottom-0 left-0 h-px w-[calc(100%-3rem)] origin-left bg-signal transition-transform duration-700 ease-out sm:left-6",
+                    isHovered ? "scale-x-100" : "scale-x-0",
                   )}
                 />
               </li>

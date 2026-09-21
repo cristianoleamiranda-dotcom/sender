@@ -62,7 +62,7 @@ export function Footer() {
                   >
                     <span
                       aria-hidden="true"
-                      className="h-px w-0 bg-signal transition-[width] duration-500 group-hover:w-4"
+                      className="h-px w-full scale-x-0 origin-left bg-signal transition-transform duration-500 group-hover:scale-x-100"
                     />
                     {item.label}
                   </a>

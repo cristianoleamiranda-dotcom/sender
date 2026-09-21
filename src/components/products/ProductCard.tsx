@@ -136,11 +136,11 @@ function CardMedia({
       />
       <span
         aria-hidden="true"
-        className="absolute top-0 left-0 h-px w-0 bg-signal transition-[width] duration-700 ease-out group-hover:w-full"
+        className="absolute top-0 left-0 h-px w-full scale-x-0 origin-left bg-signal transition-transform duration-700 ease-out group-hover:scale-x-100"
       />
       <span
         aria-hidden="true"
-        className="absolute right-0 bottom-0 h-px w-0 bg-signal transition-[width] duration-700 ease-out group-hover:w-full"
+        className="absolute right-0 bottom-0 h-px w-full scale-x-0 origin-left bg-signal transition-transform duration-700 ease-out group-hover:scale-x-100"
       />
 
       <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-4 p-4">
