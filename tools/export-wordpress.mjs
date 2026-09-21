@@ -22,6 +22,7 @@
  *   npm run export:wordpress -- --sitio=https://www.sender.cl
  */
 import { build } from "esbuild";
+import { crearPlugin, inventarioWebp } from "./esbuild-images-shim.mjs";
 import { createRequire } from "node:module";
 import { mkdirSync, rmSync, writeFileSync, copyFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
@@ -47,53 +48,11 @@ const SITIO = flag("sitio", "https://www.sender.cl").replace(/\/+$/, "");
 /* 1. Compilar el catálogo real con esbuild                            */
 /* ------------------------------------------------------------------ */
 
-/**
- * `src/content/images.ts` importa los WebP vía Vite, que fuera del build no
- * existe. Se sustituye por un módulo que devuelve las RUTAS de archivo, que es
- * lo que WordPress necesita, y las dimensiones se leen del disco.
- */
-const clavesImagen = [
-  "about",
-  "capAntennas",
-  "capBroadcast",
-  "capCritical",
-  "capRf",
-  "capTransmission",
-  "heroWide",
-  "projAm",
-  "projStl",
-];
-const kebab = (k) => k.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+/* El shim de imágenes vive en tools/esbuild-images-shim.mjs (compartido con
+   tools/gen-routes.mjs). Devuelve rutas relativas a medios/webp/. */
 const genDir = join(root, "src", "assets", "gen");
 const srcDir = join(root, "src", "assets");
-
-/**
- * El shim tiene que devolver EXACTAMENTE la forma del `images.ts` real
- * (`{ sm, md, lg, widths }`), porque el catálogo escribe `image: img.projAm.sm`.
- * Las rutas son relativas a `medios/webp/`, que es donde se copian los archivos.
- */
-function variantesDe(base) {
-  return [640, 960, 1280].filter((w) => existsSync(join(genDir, `${base}-${w}.webp`)));
-}
-const shim = clavesImagen
-  .map((k) => {
-    const base = kebab(k);
-    const vs = variantesDe(base);
-    const f = (w) => `${base}-${w}.webp`;
-    return `  ${k}: { sm: ${JSON.stringify(f(vs[0]))}, md: ${JSON.stringify(f(vs[1] ?? vs[0]))}, lg: ${JSON.stringify(vs[2] ? f(vs[2]) : undefined)}, widths: ${JSON.stringify(vs)} },`;
-  })
-  .join("\n");
-
-const imagesPlugin = {
-  name: "images-shim",
-  setup(b) {
-    b.onResolve({ filter: /\/images$/ }, (a) => ({ path: a.path, namespace: "images-shim" }));
-    b.onLoad({ filter: /.*/, namespace: "images-shim" }, () => ({
-      contents: `export const img = {\n${shim}\n};\nexport const heroPoster = { base: "hero-poster", dir: "public/assets" };\nexport const heroVideo = "public/assets/sender-hero.mp4";\nexport function srcSetOf() { return ""; }\n`,
-      loader: "js",
-    }));
-  },
-};
+const imagesPlugin = crearPlugin({ root });
 
 const tmp = join(root, ".wp-export");
 rmSync(tmp, { recursive: true, force: true });
@@ -133,16 +92,8 @@ for (const d of ["contenido", "seo", "medios/webp", "medios/jpg", "build-spa"]) 
   mkdirSync(join(OUT, d), { recursive: true });
 }
 
-/** base -> { archivoOriginal, variantes } leído del disco. */
-const porBase = new Map();
-for (const f of readdirSync(genDir)) {
-  const m = f.match(/^(.+)-(640|960|1280)\.webp$/);
-  if (!m) continue;
-  const [, base, w] = m;
-  if (!porBase.has(base)) porBase.set(base, []);
-  porBase.get(base).push(Number(w));
-}
-for (const [base, vs] of porBase) vs.sort((a, b) => a - b);
+/** base -> anchos disponibles, desde el módulo compartido. */
+const porBase = inventarioWebp(genDir);
 
 const manifest = { generado: new Date().toISOString(), origen: "src/assets + public/assets", imagenes: [] };
 const jpgGenerados = [];

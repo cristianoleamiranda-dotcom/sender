@@ -12,14 +12,15 @@
     "assets": "python3 scripts/optimize-assets.py",
     "sitemap": "python3 scripts/build-sitemap.py",
     "fixbase": "node scripts/fix-base.mjs",
-    "qa": "node qa/qa.mjs",
+    "qa": "npm run routes && node qa/qa.mjs",
     "qa:control": "node qa/probe-test.mjs",
     "guard": "node qa/no-opacity-text.mjs",
     "serve": "node scripts/serve-dist.mjs",
     "qa:pages": "node qa/pages-base.mjs",
     "qa:all": "npm run qa && npm run qa:pages",
     "export:wordpress": "node tools/export-wordpress.mjs",
-    "qa:s24": "node qa/dispositivo-s24.mjs"
+    "qa:s24": "node qa/dispositivo-s24.mjs",
+    "routes": "node tools/gen-routes.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",
