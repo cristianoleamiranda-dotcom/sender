@@ -38,6 +38,11 @@ Fecha: **2026-09-20**.
 | `scripts/serve-dist.mjs` | Acepta `VITE_BASE_PATH` y recorta el prefijo, para poder probar el build de Pages en local |
 | `qa/pages-base.mjs` | **Nuevo.** Arnés del flujo de rutas profundas con base `/sender/` |
 | `tools/export-wordpress.mjs` | **Nuevo.** Exportador reproducible a WordPress |
+| `tools/gen-routes.mjs` | **Nuevo.** Genera la lista de rutas desde el catálogo y la compara con el sitemap |
+| `tools/esbuild-images-shim.mjs` | **Nuevo.** Shim de esbuild para leer `src/content/` desde Node, compartido por los dos tools |
+| `qa/qa.mjs` | Recorre las 27 rutas generadas (antes 6 escritas a mano, incluida `/contacto` que no existe) |
+| `qa/routes.generated.json` | **Nuevo, generado.** No editar a mano |
+| `qa/dispositivo-s24.mjs` | **Nuevo.** Perfil real del S24: 360×780, DPR 3 |
 | `package.json` | Scripts nuevos: `qa:pages`, `qa:all`, `export:wordpress` |
 | `.github/workflows/datadog-synthetics.yml` | Cambiado a `workflow_dispatch`: fallaba en cada push por falta de secrets |
 | `package-lock.json` | Regenerado: faltaba `playwright` y rompía `npm ci` en CI |
@@ -65,8 +70,10 @@ VITE_BASE_PATH=/sender/ npm run build && rm -rf wordpress-export/build-spa && cp
 | Ítem | Estado |
 | --- | --- |
 | Rama de trabajo | `arena/01a0afb6-sender` |
-| Commits en la rama | 11 por delante de `main` al cierre (los 10 primeros ya están fusionados vía PR #7 y #8; falta el último) |
-| Commit pendiente de push | `c373d13` — *fix(routing): las rutas profundas publicadas mostraban la home* |
+| Commits pendientes de push | **3** |
+| 1. | `c373d13` — *fix(routing)*: las rutas profundas publicadas mostraban la home |
+| 2. | `6cfc464` — *docs+tools*: documentación de proceso, QA del perfil S24 y exportador a WordPress |
+| 3. | `46abc37` — *test(qa)*: rutas del arnés generadas desde el catálogo |
 | PR fusionados | #7 (rediseño completo, 8 commits, +9992/−2141) y #8 (fix de CI) |
 | Sitio publicado | `https://cristianoleamiranda-dotcom.github.io/sender/` — **vivo, pero con el build anterior al arreglo de rutas** |
 | Bug conocido en producción | Las rutas profundas (`/productos/`, `/producto/...`) muestran la home. Arreglado y verificado en local; **falta publicar** |
@@ -90,16 +97,19 @@ Sobre `vite preview`, antes del arreglo de rutas (que no afecta rendimiento):
 
 Assets: 4,69 MB → 1,08 MB en WebP (24 imágenes).
 
-Verificación en perfil Samsung Galaxy S24 (viewport 360×780, DPR 3), con el
-arreglo aplicado en local:
+**Verificación tras los cambios (2026-09-20, sobre el build idéntico al de CI):**
 
-| Ruta | Desborde horizontal | H1 |
+| Arnés | Cobertura | Resultado |
 | --- | --- | --- |
-| `/` | no (360/360) | SENDER |
-| `/productos/` | no | SOLUCIONES DE TRANSMISIÓN |
-| `/producto/serie-sender-ss/` | no | TRANSMISORES AM SERIE SENDER SS |
+| `npm run qa` | 27 rutas, contraste WCAG AA página completa en cada una | verde, sin problemas |
+| `npm run qa:pages` | 4 rutas profundas vía el rebote de `404.html` con base `/sender/` | verde |
+| `npm run qa:s24` | 26 rutas con viewport 360×780 y DPR 3 | verde, cero desbordes horizontales |
+| Réplica de CI | `git archive HEAD` → `npm ci` → `npx tsc -b --force` → `VITE_BASE_PATH=/sender/ npm run build` | verde |
+| Determinismo | `dist/` local vs `dist/` de la réplica de CI | **idénticos byte a byte** |
 
-QA (`npm run qa`) y QA de Pages (`npm run qa:pages`): ambos en verde.
+El único elemento que sobresale del viewport a 360 px es un `dd.mono` dentro de
+las tablas de especificaciones: es desplazamiento horizontal *interno* de la
+tabla, intencional, y no produce desborde de página.
 
 ## 7. Datos verificados del negocio
 
@@ -131,6 +141,8 @@ fechas de hitos.
 | 6 | Crear el repo privado del proyecto social y mover `PROYECTO-SOCIAL.md` | Persona | — |
 | 7 | Responder las 10 preguntas de `PROYECTO-SOCIAL.md` §6 | Persona | — |
 | 8 | Decidir si se actúa sobre `scroll-craft` (datos de contacto falsos publicados) y `freellmapi` (README del fork) | Persona | — |
+| 10 | Opcional: que `build-sitemap.py` lea `qa/routes.generated.json` en vez de su propia lista (hoy coinciden, verificado por el control cruzado) | Agente | — |
+| 11 | Opcional: que el sitemap se escriba en `dist/` y no en `public/`, para que el build no toque archivos versionados | Agente | — |
 | 9 | Si se quiere Datadog Synthetics activo: secrets `DD_API_KEY`/`DD_APP_KEY`, tests con tag `e2e-tests` y restaurar los triggers | Persona | — |
 
 ## 9. Procesos y archivos temporales de la sesión

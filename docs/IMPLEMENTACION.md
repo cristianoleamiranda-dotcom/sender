@@ -256,3 +256,29 @@ Ahora el preload comprueba la ruta efectiva, contando la que viene en
 resuelven con prefijo, recorre cuatro rutas profundas vía `?redirect=` y
 verifica H1, `<title>` y URL final. Regla práctica: **lo que depende del base
 hay que probarlo con el base puesto.**
+
+## Las rutas del arnés de QA también se generan
+
+El mismo día se encontró un segundo fallo de la misma familia, esta vez en las
+pruebas.
+
+`qa/qa.mjs` llevaba su lista de rutas escrita a mano. Con el tiempo derivó del
+router:
+
+- Probaba `/contacto`, que **no es una ruta**: es un ancla de la home. El
+  navegador la resuelve con el comodín, así que el arnés medía el contraste de la
+  página "señal no encontrada" y lo reportaba como correcto.
+- Dejaba fuera 14 de las 16 fichas de producto y la categoría `automatizacion`.
+
+Lo que hace peligroso este tipo de fallo es que **no se manifiesta**: una ruta
+inexistente no rompe nada, devuelve el 404, y el QA sigue en verde. Es el mismo
+mecanismo que ocultó el bug de las rutas profundas en producción.
+
+Arreglo: `tools/gen-routes.mjs` genera `qa/routes.generated.json` desde
+`src/content/catalog.ts` —la misma fuente que alimenta el sitemap— y compara
+ambas listas. Si rutas y sitemap discrepan, el QA lo reporta como fallo. La
+cobertura pasó de 6 rutas a 27, y cualquier ruta escrita a mano que no exista en
+el catálogo se reporta en vez de pasar en verde.
+
+Regla general que queda de los dos episodios: **las listas de rutas no se
+escriben a mano.** Se derivan de la fuente de contenido, que es única.

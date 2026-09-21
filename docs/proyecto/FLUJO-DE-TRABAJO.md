@@ -78,8 +78,9 @@ La persona pega el brief (concepto, paleta, secciones, restricciones). El agente
 
 | Qué | Con qué | Umbral de este proyecto |
 | --- | --- | --- |
-| Funcional + accesibilidad | `npm run qa` (Playwright) | verde, sin excepciones |
+| Funcional + accesibilidad | `npm run qa` (Playwright, 27 rutas generadas desde el catálogo) | verde, sin excepciones |
 | Rutas profundas con base de Pages | `npm run qa:pages` | verde |
+| Dispositivo real | `npm run qa:s24` (viewport 360×780, DPR 3) | sin desborde horizontal en ninguna ruta |
 | Rendimiento | Lighthouse CLI sobre `vite preview` | móvil ≥ 78, desktop ≥ 95 |
 | Contraste | `qa/contrast.mjs` | WCAG AA en todo texto |
 
@@ -233,4 +234,5 @@ npm run export:wordpress -- --sitio=https://www.sender.cl
 | Editar `package.json` a mano | `npm ci` rojo en CI, verde en local | `npm install --package-lock-only` + probar `npm ci` |
 | `env` en `jobs.<id>.if` | El workflow fallaba sin crear ningún job | No usar contextos no garantizados en condiciones de job |
 | Prerender + `createRoot` | Empeoraba el móvil en vez de mejorarlo | SPA plana; el camino a prerender real es el modo framework de React Router |
+| Rutas del QA escritas a mano | El arnés probaba `/contacto`, que no existe: medía la página 404 y daba verde | Las listas de rutas se **generan** desde la fuente de contenido (`tools/gen-routes.mjs`), nunca se escriben a mano |
 | Token en el chat | `Bad credentials` al final del proceso | Variable de entorno + fine-grained + rotación |
