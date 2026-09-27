@@ -1,6 +1,1 @@
-✓ 2290 modules transformed.
-dist/index.html                   1.86 kB │ gzip:   0.78 kB
-dist/assets/index-C8P3gRBx.css   20.92 kB │ gzip:   4.69 kB
-dist/assets/index-fPU2fYMT.js   409.36 kB │ gzip: 128.38 kB
-✓ built in 451ms# sender
-web
+✓ 2290 modules transformed. dist/index.html 1.86 kB │ gzip: 0.78 kB dist/assets/index-C8P3gRBx.css 20.92 kB │ gzip: 4.69 kB dist/assets/index-fPU2fYMT.js 409.36 kB │ gzip: 128.38 kB ✓ built in 451ms# sender web
