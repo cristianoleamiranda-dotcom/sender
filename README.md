@@ -28,8 +28,7 @@ Idiomas ES por defecto, EN completo. LanguageContext fija y persiste la elecció
 
 Rutas Ruta Página / Home (11 secciones) /productos Catálogo: 7 categorías, 16 productos /productos/:categorySlug Categoría /producto/:productSlug Ficha de producto /soluciones, /soluciones/:slug Redirección de compatibilidad a /productos
 
-404 basename se deriva de import.meta.env.BASE_URL, así que el mismo código de rutas sirve en la raíz de un dominio y bajo /sender/ en GitHub Pages.
-Sistema de diseño Tailwind v4 en modo CSS-first: los tokens están en @theme dentro de src/index.css, no hay tailwind.config.js.
+404 basename se deriva de import.meta.env.BASE_URL, así que el mismo código de rutas sirve en la raíz de un dominio y bajo /sender/ en GitHub Pages. Sistema de diseño Tailwind v4 en modo CSS-first: los tokens están en @theme dentro de src/index.css, no hay tailwind.config.js.
 
 Paleta. Superficies de negro a grafito (void #050708 → steel #2a2f35), texto en paper #ffffff / mute #9ba3ab / faint #8a949b, y la marca en signal #1E73BE, signal-soft #4f9ad8, signal-deep #0085B2.
 
