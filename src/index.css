@@ -146,9 +146,9 @@
   /* Display: títulos gigantes, bold, compactos, editoriales */
   .display {
     font-family: var(--font-display);
-    font-weight: 700;
-    line-height: 0.86;
-    letter-spacing: -0.045em;
+    font-weight: 800;
+    line-height: 0.82;
+    letter-spacing: -0.05em;
     color: var(--color-paper);
     text-transform: uppercase;
   }
